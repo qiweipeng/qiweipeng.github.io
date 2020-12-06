@@ -146,6 +146,127 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://blog.qiweipeng.com/2020/12/06/data-structure-map/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="齐卫鹏">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="齐卫鹏的博客">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2020/12/06/data-structure-map/" class="post-title-link" itemprop="url">数据结构学习笔记 - 08 映射</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+              
+
+              <time title="创建时间：2020-12-06 11:23:46 / 修改时间：11:35:21" itemprop="dateCreated datePublished" datetime="2020-12-06T11:23:46+08:00">2020-12-06</time>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <h2 id="介绍"><a href="#介绍" class="headerlink" title="介绍"></a>介绍</h2><p>映射在有的语言也叫 <code>字典</code>，代表一种一一对应的关系。</p>
+<p>主要的应用如：</p>
+<ul>
+<li><p>字典：单词–&gt;释意</p>
+</li>
+<li><p>名册：身份证号–&gt;人</p>
+</li>
+<li><p>车辆管理：车牌号–&gt;车</p>
+</li>
+<li><p>数据库：id–&gt;信息</p>
+</li>
+<li><p>单词统计：单词–&gt;频率</p>
+<p>映射也分有序映射和无序映射。有序映射基于搜索树实现，无序映射通常会使用哈希表实现。</p>
+<p>集合和映射是很相似的，使用映射完全可以包装出一个集合的结构，只需不管 value 即可。</p>
+</li>
+</ul>
+<h2 id="实现"><a href="#实现" class="headerlink" title="实现"></a>实现</h2><p>定义映射的接口：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br><span class="line">115</span><br><span class="line">116</span><br><span class="line">117</span><br><span class="line">118</span><br><span class="line">119</span><br><span class="line">120</span><br><span class="line">121</span><br><span class="line">122</span><br><span class="line">123</span><br><span class="line">124</span><br><span class="line">125</span><br><span class="line">126</span><br><span class="line">127</span><br><span class="line">128</span><br><span class="line">129</span><br><span class="line">130</span><br><span class="line">131</span><br><span class="line">132</span><br><span class="line">133</span><br><span class="line">134</span><br><span class="line">135</span><br><span class="line">136</span><br><span class="line">137</span><br><span class="line">138</span><br><span class="line">139</span><br><span class="line">140</span><br><span class="line">141</span><br><span class="line">142</span><br><span class="line">143</span><br><span class="line">144</span><br><span class="line">145</span><br><span class="line">146</span><br><span class="line">147</span><br><span class="line">148</span><br><span class="line">149</span><br><span class="line">150</span><br><span class="line">151</span><br><span class="line">152</span><br><span class="line">153</span><br><span class="line">154</span><br><span class="line">155</span><br><span class="line">156</span><br><span class="line">157</span><br><span class="line">158</span><br><span class="line">159</span><br><span class="line">160</span><br><span class="line">161</span><br><span class="line">162</span><br><span class="line">163</span><br><span class="line">164</span><br><span class="line">165</span><br><span class="line">166</span><br><span class="line">167</span><br><span class="line">168</span><br><span class="line">169</span><br><span class="line">170</span><br><span class="line">171</span><br><span class="line">172</span><br><span class="line">173</span><br><span class="line">174</span><br><span class="line">175</span><br><span class="line">176</span><br><span class="line">177</span><br><span class="line">178</span><br><span class="line">179</span><br><span class="line">180</span><br><span class="line">181</span><br><span class="line">182</span><br><span class="line">183</span><br><span class="line">184</span><br><span class="line">185</span><br><span class="line">186</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">interface</span> <span class="title">Map</span>&lt;<span class="title">K</span>, <span class="title">V</span>&gt; </span>&#123; </span><br><span class="line">    </span><br><span class="line">    <span class="function"><span class="keyword">void</span> <span class="title">add</span><span class="params">(K key, V value)</span></span>;</span><br><span class="line"></span><br><span class="line">    <span class="function">V <span class="title">remove</span><span class="params">(K key)</span></span>;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">boolean</span> <span class="title">contains</span><span class="params">(K key)</span></span>;</span><br><span class="line"></span><br><span class="line">    <span class="function">V <span class="title">get</span><span class="params">(K key)</span></span>;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">void</span> <span class="title">set</span><span class="params">(K key, V newValue)</span></span>;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">int</span> <span class="title">getSize</span><span class="params">()</span></span>;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">boolean</span> <span class="title">isEmpty</span><span class="params">()</span></span>;</span><br><span class="line">&#125;</span><br><span class="line">``` </span><br><span class="line"></span><br><span class="line">使用二分搜索树实现的映射：</span><br><span class="line"></span><br><span class="line">``` java</span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">BSTMap</span>&lt;<span class="title">K</span> <span class="keyword">extends</span> <span class="title">Comparable</span>&lt;<span class="title">K</span>&gt;, <span class="title">V</span>&gt; <span class="keyword">implements</span> <span class="title">Map</span>&lt;<span class="title">K</span>, <span class="title">V</span>&gt; </span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 在类的内部定义一个二分搜索树的节点类</span></span><br><span class="line">    <span class="keyword">private</span> <span class="class"><span class="keyword">class</span> <span class="title">Node</span> </span>&#123;</span><br><span class="line">        <span class="keyword">public</span> K key;</span><br><span class="line">        <span class="keyword">public</span> V value;</span><br><span class="line">        <span class="keyword">public</span> Node left, right;</span><br><span class="line"></span><br><span class="line">        <span class="function"><span class="keyword">public</span> <span class="title">Node</span><span class="params">(K key, V value)</span> </span>&#123;</span><br><span class="line">            <span class="keyword">this</span>.key = key;</span><br><span class="line">            <span class="keyword">this</span>.value = value;</span><br><span class="line">            left = <span class="keyword">null</span>;</span><br><span class="line">            right = <span class="keyword">null</span>;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">private</span> Node root;</span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">int</span> size;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="title">BSTMap</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        root = <span class="keyword">null</span>;</span><br><span class="line">        size = <span class="number">0</span>;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">int</span> <span class="title">getSize</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> size;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">boolean</span> <span class="title">isEmpty</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> size == <span class="number">0</span>;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">add</span><span class="params">(K key, V value)</span> </span>&#123;</span><br><span class="line">        root = add(root, key, value);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">private</span> Node <span class="title">add</span><span class="params">(Node node, K key, V value)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">if</span> (node == <span class="keyword">null</span>) &#123;</span><br><span class="line">            size++;</span><br><span class="line">            <span class="keyword">return</span> <span class="keyword">new</span> Node(key, value);</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">if</span> (key.compareTo(node.key) &lt; <span class="number">0</span>) &#123;</span><br><span class="line">            node.left = add(node, key, value);</span><br><span class="line">        &#125; <span class="keyword">else</span> <span class="keyword">if</span> (key.compareTo(node.key) &gt; <span class="number">0</span>) &#123;</span><br><span class="line">            node.right = add(node, key, value);</span><br><span class="line">        &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">            node.value = value;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">return</span> node;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">private</span> Node <span class="title">getNode</span><span class="params">(Node node, K key)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">if</span> (node == <span class="keyword">null</span>) &#123;</span><br><span class="line">            <span class="keyword">return</span> <span class="keyword">null</span>;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">if</span> (key.compareTo(node.key) == <span class="number">0</span>) &#123;</span><br><span class="line">            <span class="keyword">return</span> node;</span><br><span class="line">        &#125; <span class="keyword">else</span> <span class="keyword">if</span> (key.compareTo(node.key) &lt; <span class="number">0</span>) &#123;</span><br><span class="line">            <span class="keyword">return</span> getNode(node.left, key);</span><br><span class="line">        &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">            <span class="keyword">return</span> getNode(node.right, key);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">boolean</span> <span class="title">contains</span><span class="params">(K key)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> getNode(root, key) != <span class="keyword">null</span>;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> V <span class="title">get</span><span class="params">(K key)</span> </span>&#123;</span><br><span class="line">        Node node = getNode(root, key);</span><br><span class="line">        <span class="keyword">return</span> node == <span class="keyword">null</span> ? <span class="keyword">null</span> : node.value;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">set</span><span class="params">(K key, V newValue)</span> </span>&#123;</span><br><span class="line">        Node node = getNode(root, key);</span><br><span class="line"></span><br><span class="line">        <span class="keyword">if</span> (node == <span class="keyword">null</span>) &#123;</span><br><span class="line">            <span class="keyword">throw</span> <span class="keyword">new</span> IllegalArgumentException(key + <span class="string">&quot;dosen&#x27;t exist!&quot;</span>);</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        node.value = newValue;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">private</span> Node <span class="title">minimum</span><span class="params">(Node node)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">if</span> (node.left == <span class="keyword">null</span>) &#123;</span><br><span class="line">            <span class="keyword">return</span> node;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">return</span> minimum(node.left);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">private</span> Node <span class="title">removeMin</span><span class="params">(Node node)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">if</span> (node.left == <span class="keyword">null</span>) &#123;</span><br><span class="line">            Node rightNode = node.right;</span><br><span class="line">            node.right = <span class="keyword">null</span>;</span><br><span class="line">            size--;</span><br><span class="line">            <span class="keyword">return</span> rightNode;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        node.left = removeMin(node.left);</span><br><span class="line">        <span class="keyword">return</span> node;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> V <span class="title">remove</span><span class="params">(K key)</span> </span>&#123;</span><br><span class="line">        Node node = getNode(root, key);</span><br><span class="line">        <span class="keyword">if</span> (node != <span class="keyword">null</span>) &#123;</span><br><span class="line">            root = remove(root, key);</span><br><span class="line">            <span class="keyword">return</span> node.value;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">null</span>;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">private</span> Node <span class="title">remove</span><span class="params">(Node node, K key)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">if</span> (node == <span class="keyword">null</span>) &#123;</span><br><span class="line">            <span class="keyword">return</span> <span class="keyword">null</span>;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">if</span> (key.compareTo(node.key) &lt; <span class="number">0</span>) &#123;</span><br><span class="line">            node.left = remove(node.left, key);</span><br><span class="line">            <span class="keyword">return</span> node;</span><br><span class="line">        &#125; <span class="keyword">else</span> <span class="keyword">if</span> (key.compareTo(node.key) &gt; <span class="number">0</span>) &#123;</span><br><span class="line">            node.left = remove(node.right, key);</span><br><span class="line">            <span class="keyword">return</span> node;</span><br><span class="line">        &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">            <span class="comment">// 待删除节点右子树为空</span></span><br><span class="line">            <span class="keyword">if</span> (node.left == <span class="keyword">null</span>) &#123;</span><br><span class="line">                Node rightNode = node.right;</span><br><span class="line">                node.right = <span class="keyword">null</span>;</span><br><span class="line">                size--;</span><br><span class="line">                <span class="keyword">return</span> rightNode;</span><br><span class="line">            &#125;</span><br><span class="line"></span><br><span class="line">            <span class="comment">// 待删除节点右子树为空</span></span><br><span class="line">            <span class="keyword">if</span> (node.right == <span class="keyword">null</span>) &#123;</span><br><span class="line">                Node leftNode = node.left;</span><br><span class="line">                node.left = <span class="keyword">null</span>;</span><br><span class="line">                size--;</span><br><span class="line">                <span class="keyword">return</span> leftNode;</span><br><span class="line">            &#125;</span><br><span class="line"></span><br><span class="line">            <span class="comment">// 待删除节点左右子树均不为空</span></span><br><span class="line">            <span class="comment">// 找到比待删除节点大的最小节点，即待删除节点右子树的最小节点</span></span><br><span class="line">            <span class="comment">// 用这个节点顶替待删除节点的位置。</span></span><br><span class="line">            Node successor = minimum(node.right);</span><br><span class="line">            successor.right = removeMin(node.right);</span><br><span class="line">            successor.left = node.left;</span><br><span class="line"></span><br><span class="line">            node.left = node.right = <span class="keyword">null</span>;</span><br><span class="line"></span><br><span class="line">            <span class="keyword">return</span> successor;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>使用链表实现的映射：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br><span class="line">115</span><br><span class="line">116</span><br><span class="line">117</span><br><span class="line">118</span><br><span class="line">119</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">LinkedListMap</span>&lt;<span class="title">K</span>, <span class="title">V</span>&gt; <span class="keyword">implements</span> <span class="title">Map</span>&lt;<span class="title">K</span>, <span class="title">V</span>&gt; </span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">private</span> <span class="class"><span class="keyword">class</span> <span class="title">Node</span> </span>&#123;</span><br><span class="line">        <span class="keyword">public</span> K key;</span><br><span class="line">        <span class="keyword">public</span> V value;</span><br><span class="line">        <span class="keyword">public</span> Node next;</span><br><span class="line"></span><br><span class="line">        <span class="function"><span class="keyword">public</span> <span class="title">Node</span><span class="params">(K key, V value, Node next)</span> </span>&#123;</span><br><span class="line">            <span class="keyword">this</span>.key = key;</span><br><span class="line">            <span class="keyword">this</span>.value = value;</span><br><span class="line">            <span class="keyword">this</span>.next = next;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="function"><span class="keyword">public</span> <span class="title">Node</span><span class="params">(K key)</span> </span>&#123;</span><br><span class="line">            <span class="keyword">this</span>(key, <span class="keyword">null</span>, <span class="keyword">null</span>);</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="function"><span class="keyword">public</span> <span class="title">Node</span><span class="params">()</span> </span>&#123;</span><br><span class="line">            <span class="keyword">this</span>(<span class="keyword">null</span>);</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="meta">@Override</span></span><br><span class="line">        <span class="function"><span class="keyword">public</span> String <span class="title">toString</span><span class="params">()</span> </span>&#123;</span><br><span class="line">            <span class="keyword">return</span> key.toString() + <span class="string">&quot;: &quot;</span> + value.toString();</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">private</span> Node dummyHead;</span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">int</span> size;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="title">LinkedListMap</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        dummyHead = <span class="keyword">new</span> Node();</span><br><span class="line">        size = <span class="number">0</span>;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">int</span> <span class="title">getSize</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> size;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">boolean</span> <span class="title">isEmpty</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> size == <span class="number">0</span>;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * 私有的辅助函数，传入一个 key，返回对应的节点的引用。</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@param</span> key</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@return</span></span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="function"><span class="keyword">private</span> Node <span class="title">getNode</span><span class="params">(K key)</span> </span>&#123;</span><br><span class="line">        Node cur = dummyHead.next;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">while</span> (cur != <span class="keyword">null</span>) &#123;</span><br><span class="line">            <span class="keyword">if</span> (cur.key.equals(key)) &#123;</span><br><span class="line">                <span class="keyword">return</span> cur;</span><br><span class="line">            &#125;</span><br><span class="line">            cur = cur.next;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">null</span>;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">boolean</span> <span class="title">contains</span><span class="params">(K key)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> getNode(key) != <span class="keyword">null</span>;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> V <span class="title">get</span><span class="params">(K key)</span> </span>&#123;</span><br><span class="line">        Node node = getNode(key);</span><br><span class="line">        <span class="keyword">return</span> node == <span class="keyword">null</span> ? <span class="keyword">null</span> : node.value;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">add</span><span class="params">(K key, V value)</span> </span>&#123;</span><br><span class="line">        Node node = getNode(key);</span><br><span class="line"></span><br><span class="line">        <span class="keyword">if</span> (node == <span class="keyword">null</span>) &#123;</span><br><span class="line">            dummyHead.next = <span class="keyword">new</span> Node(key, value, dummyHead.next);</span><br><span class="line">            size++;</span><br><span class="line">        &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">            node.value = value;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">set</span><span class="params">(K key, V newValue)</span> </span>&#123;</span><br><span class="line">        Node node = getNode(key);</span><br><span class="line"></span><br><span class="line">        <span class="keyword">if</span> (node == <span class="keyword">null</span>) &#123;</span><br><span class="line">            <span class="keyword">throw</span> <span class="keyword">new</span> IllegalArgumentException(key + <span class="string">&quot;dosen&#x27;t exist!&quot;</span>);</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        node.value = newValue;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> V <span class="title">remove</span><span class="params">(K key)</span> </span>&#123;</span><br><span class="line">        Node prev = dummyHead;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">while</span> (prev.next != <span class="keyword">null</span>) &#123;</span><br><span class="line">            <span class="keyword">if</span> (prev.next.key.equals(key)) &#123;</span><br><span class="line">                <span class="keyword">break</span>;</span><br><span class="line">            &#125;</span><br><span class="line">            prev = prev.next;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">if</span> (prev.next != <span class="keyword">null</span>) &#123;</span><br><span class="line">            Node delNode = prev.next;</span><br><span class="line">            prev.next = delNode.next;</span><br><span class="line">            delNode.next = <span class="keyword">null</span>;</span><br><span class="line">            size--;</span><br><span class="line">            <span class="keyword">return</span> delNode.value;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">null</span>;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h2 id="分析"><a href="#分析" class="headerlink" title="分析"></a>分析</h2><table>
+<thead>
+<tr>
+<th></th>
+<th>链表映射</th>
+<th>二分搜索树映射（平均）</th>
+<th>二分搜索树映射（最差）</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>增 add</td>
+<td>O(n)</td>
+<td>O(logn)</td>
+<td>O(n)</td>
+</tr>
+<tr>
+<td>删 remove</td>
+<td>O(n)</td>
+<td>O(logn)</td>
+<td>O(n)</td>
+</tr>
+<tr>
+<td>改 set</td>
+<td>O(n)</td>
+<td>O(logn)</td>
+<td>O(n)</td>
+</tr>
+<tr>
+<td>查 get</td>
+<td>O(n)</td>
+<td>O(logn)</td>
+<td>O(n)</td>
+</tr>
+<tr>
+<td>查 contains</td>
+<td>O(n)</td>
+<td>O(logn)</td>
+<td>O(n)</td>
+</tr>
+</tbody></table>
+<p>对映射的分析基本和对集合的分析是一致的。</p>
+
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
     <link itemprop="mainEntityOfPage" href="https://blog.qiweipeng.com/2020/12/03/data-structure-set/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -1023,232 +1144,6 @@
   
   
 
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="https://blog.qiweipeng.com/2020/10/09/my-mac-initial-configuration/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.gif">
-      <meta itemprop="name" content="齐卫鹏">
-      <meta itemprop="description" content="">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="齐卫鹏的博客">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2020/10/09/my-mac-initial-configuration/" class="post-title-link" itemprop="url">Mac 电脑的个人配置</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">发表于</span>
-
-              <time title="创建时间：2020-10-09 23:19:25" itemprop="dateCreated datePublished" datetime="2020-10-09T23:19:25+08:00">2020-10-09</time>
-            </span>
-              <span class="post-meta-item">
-                <span class="post-meta-item-icon">
-                  <i class="far fa-calendar-check"></i>
-                </span>
-                <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2020-12-01 16:09:51" itemprop="dateModified" datetime="2020-12-01T16:09:51+08:00">2020-12-01</time>
-              </span>
-
-          
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <p>本文记录自己新装电脑后的软件安装和个性化配置，以及之后的维护。</p>
-<h2 id="软件安装"><a href="#软件安装" class="headerlink" title="软件安装"></a>软件安装</h2><h3 id="App-Store"><a href="#App-Store" class="headerlink" title="App Store"></a>App Store</h3><ul>
-<li>1Password</li>
-<li>Spark</li>
-<li>Fantastical</li>
-<li>Todoist</li>
-<li>Notability</li>
-<li>MindNode</li>
-<li>Drafts</li>
-<li>Reeder</li>
-<li>Xcode</li>
-<li>Sequel Ace</li>
-<li>Wechat</li>
-<li>QQ</li>
-<li>Pages</li>
-<li>Keynote</li>
-<li>Numbers</li>
-<li>Apple Developer</li>
-<li>Swift Playgrounds</li>
-<li>CloudMounter</li>
-<li>The Unarchiver</li>
-<li>Magnet</li>
-<li>Bear</li>
-<li>Amphetamine</li>
-<li>Carbonize</li>
-<li>Cleaner for Xcode</li>
-<li>quicktype</li>
-</ul>
-<h3 id="Homebrew"><a href="#Homebrew" class="headerlink" title="Homebrew"></a>Homebrew</h3><p>安装 <a target="_blank" rel="noopener" href="https://brew.sh/">Homebrew</a>：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ &#x2F;bin&#x2F;bash -c &quot;$(curl -fsSL https:&#x2F;&#x2F;raw.githubusercontent.com&#x2F;Homebrew&#x2F;install&#x2F;master&#x2F;install.sh)&quot;</span><br></pre></td></tr></table></figure>
-
-<p>使用 Homebrew 安装软件：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ brew install &lt;name&gt;</span><br></pre></td></tr></table></figure>
-
-<ul>
-<li>mysql</li>
-<li>git</li>
-<li>node</li>
-</ul>
-<p>使用 <code>brew cask</code> 安装应用：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ brew cask install &lt;name&gt;</span><br></pre></td></tr></table></figure>
-
-<ul>
-<li>android-studio</li>
-<li>google-chrome</li>
-<li>oracle-jdk</li>
-<li>appcleaner</li>
-<li>iina</li>
-<li>pdf-expert</li>
-<li>baidunetdisk</li>
-<li>imazing</li>
-<li>picgo</li>
-<li>db-browser-for-sqlite</li>
-<li>iterm2</li>
-<li>postman</li>
-<li>downie</li>
-<li>moneywiz</li>
-<li>fliqlo</li>
-<li>mweb</li>
-<li>visual-studio-code</li>
-<li>github</li>
-<li>notion</li>
-<li>dash</li>
-</ul>
-<h3 id="手动安装"><a href="#手动安装" class="headerlink" title="手动安装"></a>手动安装</h3><ul>
-<li>SF Symbols</li>
-<li>trojan-qt5</li>
-</ul>
-<h2 id="配置和维护"><a href="#配置和维护" class="headerlink" title="配置和维护"></a>配置和维护</h2><h3 id="需要激活的-App"><a href="#需要激活的-App" class="headerlink" title="需要激活的 App"></a>需要激活的 App</h3><ul>
-<li>MoneyWiz</li>
-<li>MWeb</li>
-<li>Sketch</li>
-<li>PDF Expert</li>
-<li>Downie</li>
-</ul>
-<h3 id="系统配置"><a href="#系统配置" class="headerlink" title="系统配置"></a>系统配置</h3><h4 id="System-Preferences"><a href="#System-Preferences" class="headerlink" title="System Preferences"></a>System Preferences</h4><ul>
-<li><code>General</code> -&gt; <code>SideBar icon size</code>: <code>Small</code></li>
-<li><code>General</code> -&gt; <code>Recent items</code>: <code>5</code></li>
-<li><code>Desktop &amp; Screen Saver</code> -&gt; <code>Screen Saver</code>: Fliqlo</li>
-<li><code>Desktop &amp; Screen Saver</code> -&gt; <code>Start after</code>: <code>5 Minutes</code></li>
-<li><code>Dock</code> -&gt; <code>Position on screen</code>: <code>Left</code></li>
-<li><code>Dock</code> -&gt; <code>Show recent application in Dock</code>: <code>NO</code></li>
-<li><code>Notifications</code>: 对所有 App 进行配置</li>
-<li><code>Accessibility</code> -&gt; <code>Pointer Control</code> -&gt; <code>Trackpad Options</code> -&gt; <code>Enable dragging</code>: <code>three finger drag</code></li>
-<li><code>Security &amp; Privacy</code> -&gt; <code>General</code> -&gt; <code>Requeire passowrd</code>: <code>5seconds</code></li>
-<li><code>Security &amp; Privacy</code> -&gt; <code>FileVault</code>: <code>Turn On</code></li>
-<li><code>Security &amp; Privacy</code> -&gt; <code>Firewall</code>: <code>Turn On</code></li>
-<li><code>Keyboard</code> -&gt; <code>Text</code> -&gt; <code>Correct spelling automatically</code>: <code>NO</code></li>
-<li><code>Keyboard</code> -&gt; <code>Input Sources</code>: 增加小鹤双拼</li>
-<li><code>Trackpad</code>: 打开所有手势</li>
-<li><code>Displays</code> -&gt; <code>NightShift</code>: <code>Turn On</code></li>
-</ul>
-<h4 id="Finder"><a href="#Finder" class="headerlink" title="Finder"></a>Finder</h4><ul>
-<li><code>General</code> -&gt; <code>New Finder windows show</code>: qiweipeng</li>
-<li><code>Tags</code>: 添加到 Favorite Tags</li>
-<li><code>SideBar</code> -&gt; <code>Favorites</code>: 仅保留 Applications、Downloads、qiweipeng</li>
-</ul>
-<h4 id="Safari"><a href="#Safari" class="headerlink" title="Safari"></a>Safari</h4><ul>
-<li>首页 -&gt; <code>Show Frequently Visited</code>: <code>Turn Off</code></li>
-<li><code>General</code> -&gt; <code>Open &quot;safe&quot; files after downloading</code>: <code>No</code></li>
-<li><code>Search</code> -&gt; <code>Search engine</code>: <code>Google</code></li>
-<li><code>Advanced</code> -&gt; <code>Show Develop menu in menu bar</code>: <code>Yes</code></li>
-<li><code>Extensions</code>: 各个插件具体配置</li>
-</ul>
-<h4 id="其它"><a href="#其它" class="headerlink" title="其它"></a>其它</h4><ul>
-<li>FaceTime -&gt; <code>Ringtone</code>: Hillside</li>
-<li>Message -&gt; <code>Message received sound</code>: Bamboo</li>
-<li>所有的系统 App 打开 iCloud 账户同步功能</li>
-</ul>
-<h3 id="Homebrew-1"><a href="#Homebrew-1" class="headerlink" title="Homebrew"></a>Homebrew</h3><p>常用命令：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><span class="line">$ brew list &#x2F;&#x2F; 安装的软件列表</span><br><span class="line"></span><br><span class="line">$ brew install &lt;name&gt; &#x2F;&#x2F; 安装某个包</span><br><span class="line"></span><br><span class="line">$ brew uninstall &lt;name&gt; &#x2F;&#x2F; 卸载安装的软件</span><br><span class="line"></span><br><span class="line">$ brew update &#x2F;&#x2F; 更新 Homebrew 本身</span><br><span class="line"></span><br><span class="line">$ brew outdated 查看过期软件</span><br><span class="line"></span><br><span class="line">$ brew upgrade &lt;formula&gt; &#x2F;&#x2F; 更新指定软件</span><br><span class="line"></span><br><span class="line">$ brew pin &lt;formula&gt; 指定某软件保持在当前版本不被更新</span><br><span class="line"></span><br><span class="line">$ brew unpin &lt;formula&gt; 取消某软件保持在当前版本</span><br><span class="line"></span><br><span class="line">$ brew --cache 查看 Homebrew 缓存目录</span><br><span class="line"></span><br><span class="line">&#x2F;&#x2F; cask 相关</span><br><span class="line"></span><br><span class="line">$ brew cask install &lt;name&gt; &#x2F;&#x2F; 使用 cask 安装软件</span><br><span class="line"></span><br><span class="line">$ brew list --cask &#x2F;&#x2F; 使用 cask 命令安装的应用列表</span><br><span class="line"></span><br><span class="line">$ brew cask uninstall &lt;name&gt; &#x2F;&#x2F; 卸载使用 cask 命令安装的应用</span><br><span class="line"></span><br><span class="line">$ brew cask search &lt;name&gt; &#x2F;&#x2F; 查找</span><br></pre></td></tr></table></figure>
-
-<p>避免 Homebrew 自动更新：在 <code>~/.zshrc</code> 文件中写入 <code>export HOMEBREW_NO_AUTO_UPDATE=true</code>。</p>
-<p>安装 <a target="_blank" rel="noopener" href="https://github.com/buo/homebrew-cask-upgrade">homebrew-cask-upgrade</a> 方便 cask 应用更新：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">$ brew tap buo&#x2F;cask-upgrade &#x2F;&#x2F; 安装</span><br><span class="line"></span><br><span class="line">$ brew cu -a &#x2F;&#x2F; 更新所有</span><br><span class="line"></span><br><span class="line">$ brew cu &lt;name&gt; -a 更新指定</span><br></pre></td></tr></table></figure>
-
-<h3 id="node"><a href="#node" class="headerlink" title="node"></a>node</h3><p>常用命令：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">$ npm list &#x2F;&#x2F; 查看当前目录安装的包</span><br><span class="line"></span><br><span class="line">$ npm list -g --depth 0 &#x2F;&#x2F; 查看本地全局安装过的包</span><br></pre></td></tr></table></figure>
-
-<p>如果需要多版本的 <code>node</code> 则可以通过 <code>brew install nvm</code> 安装 <code>nvm</code>，之后通过 <code>nvm</code> 安装和管理各版本的 <code>node</code>。</p>
-<h3 id="CocoaPods"><a href="#CocoaPods" class="headerlink" title="CocoaPods"></a>CocoaPods</h3><p>安装 <a target="_blank" rel="noopener" href="https://cocoapods.org/">CocoaPods</a>：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ sudo gem install cocoapods</span><br></pre></td></tr></table></figure>
-
-<p>CocoaPods 版本更新：首先使用 <code>$ sudo gem install cocoapods</code> 安装最新版本，之后看哪些被更新了(<code>$ gem list</code>)，再将旧版本卸载掉，比如 <code>$ sudo gem uninstall cocoapods-core -v 1.9.1</code>。</p>
-<p>常用命令：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">pod repo &#x2F;&#x2F; 查看本地关联了哪些仓库源</span><br><span class="line"></span><br><span class="line">pod repo update &#x2F;&#x2F; 本地仓库更新</span><br><span class="line"></span><br><span class="line">pod repo update &lt;name&gt; &#x2F;&#x2F; 更新指定的仓库</span><br></pre></td></tr></table></figure>
-
-<h3 id="Git"><a href="#Git" class="headerlink" title="Git"></a>Git</h3><p>参考个人文章<a href="https://blog.qiweipeng.com/2018/04/06/git-ssh-key/">《macOS 下 Git 多账号配置，同时管理多个 SSH Key》</a>配置 SSH Key，主要用在 GitHub。</p>
-<p>参考个人文章<a href="https://blog.qiweipeng.com/2018/04/06/gitignore-ds_store/">《如何设置 Git 全局忽略 .DS_Store 文件》</a>配置全局忽略文件。</p>
-<p>参考个人文章<a href="https://blog.qiweipeng.com/2018/04/07/some-git-commands/">《记录一些 Git 的命令》</a>对 Git 进行配置，如：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">&#x2F;&#x2F; 设置全局的用户名和邮箱</span><br><span class="line">$ git config --global user.name &quot;&lt;name&gt;&quot;</span><br><span class="line">$ git config --global user.email &quot;&lt;email address&gt;&quot;</span><br><span class="line"></span><br><span class="line">&#x2F;&#x2F; 让 Git 输出语句显示颜色</span><br><span class="line">$ git config --global color.ui true</span><br><span class="line"></span><br><span class="line">&#x2F;&#x2F; 给常用 Git 命令设置别名，以快捷输入，这个依然是保存在家目录的 .gitconfig 文件中</span><br><span class="line">$ git config --global alias.st status</span><br><span class="line">$ git config --global alias.co checkout</span><br><span class="line">$ git config --global alias.ci commit</span><br><span class="line">$ git config --global alias.br branch</span><br><span class="line">$ git config --global alias.unstage &#39;reset HEAD&#39;</span><br><span class="line">$ git config --global alias.last &#39;log -1&#39;</span><br><span class="line">$ git config --global alias.lg &quot;log --color --graph --pretty&#x3D;format:&#39;%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr) %C(bold blue)&lt;%an&gt;%Creset&#39; --abbrev-commit&quot;</span><br></pre></td></tr></table></figure>
-
-<h3 id="Xcode"><a href="#Xcode" class="headerlink" title="Xcode"></a>Xcode</h3><h4 id="配置-GitHub"><a href="#配置-GitHub" class="headerlink" title="配置 GitHub"></a>配置 GitHub</h4><p>登录 GitHub：需要配置 Personal access tokens，命名如 <code>Weipeng&#39;s MacBook Pro - Xcode</code>，打开的权限：</p>
-<ul>
-<li>repo</li>
-<li>admin:org</li>
-<li>admin:public_key</li>
-<li>user</li>
-</ul>
-<h4 id="代码块"><a href="#代码块" class="headerlink" title="代码块"></a>代码块</h4><p>将备份的<a target="_blank" rel="noopener" href="https://github.com/qiweipeng/CodeSnippets">代码块</a>，即 <code>CodeSnippets</code> 文件夹拖入 <code>~/Library/Developer/Xcode/UserData</code> 目录内。</p>
-<h4 id="偏好设置"><a href="#偏好设置" class="headerlink" title="偏好设置"></a>偏好设置</h4><p><code>Preferences</code> 选中 <code>Behaviors</code>，根据 <code>图 - 1</code> 和 <code>图 - 2</code> 进行设置。</p>
-<p><img src="https://image.qiweipeng.com/20201010101100.png"></p>
-<p>图 - 1: Xcode 偏好设置1</p>
-<p><img src="https://image.qiweipeng.com/20201010101109.png"></p>
-<p>图 - 2: Xcode 偏好设置2</p>
-<h4 id="命令行快捷键"><a href="#命令行快捷键" class="headerlink" title="命令行快捷键"></a>命令行快捷键</h4><p>创建文件 <code>open_terminal.sh</code>，写入代码：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">#!&#x2F;bin&#x2F;sh</span><br><span class="line">if [ -n &quot;$XcodeProjectPath&quot; ]; then</span><br><span class="line">    open -a iTerm &quot;$XcodeProjectPath&quot;&#x2F;..</span><br><span class="line">else</span><br><span class="line">    open -a iTerm &quot;$XcodeWorkspacePath&quot;&#x2F;..</span><br><span class="line">fi</span><br></pre></td></tr></table></figure>
-
-<p>之后将脚本保存 <code>~/Local/Scripts/</code> 目录下，然后在该目录下执行 <code>chmod +x open_terminal.sh</code> 将脚步设为可执行。</p>
-<p>打开 Xcode 的 <code>Preferences</code>，选中 <code>Behaviors</code>，新建并命名为 <code>Open Terminal</code>，快捷键设置为 <code>Control + Command + /</code>，路径选择脚本所在路径。</p>
-<p><img src="https://image.qiweipeng.com/20201009190201.png"></p>
-<p>图 - 3: 打开命令行脚本设置</p>
-<h3 id="Visual-Studio-Code"><a href="#Visual-Studio-Code" class="headerlink" title="Visual Studio Code"></a>Visual Studio Code</h3><p><code>Shift + Command + P</code> 之后找到 <code>Shell Command: Install &quot;code&quot; command in PATH</code>，运行。</p>
-<h3 id="PicGo"><a href="#PicGo" class="headerlink" title="PicGo"></a>PicGo</h3><p>打开[上传前重命名]和[时间戳重命名]。</p>
-<p>GitHub 图床设置：</p>
-<p><img src="https://image.qiweipeng.com/20201009192119.png"></p>
-<p>图 - 4: PicGo 中 GitHub 图床设置</p>
-<p>其中需要配置 Personal access tokens，命名如 <code>Weipeng&#39;s MacBook Pro - PicGo</code>，打开的权限：</p>
-<ul>
-<li>repo</li>
-</ul>
-<h3 id="Trojan"><a href="#Trojan" class="headerlink" title="Trojan"></a>Trojan</h3><p>User Rules 配置：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">||notion.so</span><br><span class="line">||*.notion.so</span><br><span class="line">||github.com</span><br><span class="line">||*.github.com</span><br><span class="line">||githubusercontent.com</span><br><span class="line">||*.githubusercontent.com</span><br><span class="line">||dribbble.com</span><br><span class="line">||*.dribbble.com</span><br></pre></td></tr></table></figure>
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
 
   
   <nav class="pagination">
@@ -1318,7 +1213,7 @@
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">33</span>
+          <span class="site-state-item-count">34</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
