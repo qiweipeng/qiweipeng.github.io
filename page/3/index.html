@@ -146,6 +146,99 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://blog.qiweipeng.com/2018/04/07/some-git-commands/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="齐卫鹏">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="齐卫鹏的博客">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2018/04/07/some-git-commands/" class="post-title-link" itemprop="url">记录一些 Git 的命令</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2018-04-07 19:42:56" itemprop="dateCreated datePublished" datetime="2018-04-07T19:42:56+08:00">2018-04-07</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2020-12-01 16:09:51" itemprop="dateModified" datetime="2020-12-01T16:09:51+08:00">2020-12-01</time>
+              </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <p>Sourcetree 莫名无法登陆 Atlassian 账号之后，打算尝试用命令行操作 Git，但是用习惯了 GUI，Git 命令都快忘的一干二净了。于是又打开廖雪峰老师的 Git 教程，准备再仔细过一遍。同时结合其他 Git 教程，把 Git 的基本概念、使用再重新梳理一遍。这里就记录一些常用的 Git 命令。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">&#x2F;&#x2F; 设置全局的用户名和邮箱</span><br><span class="line">$ git config --global user.name &quot;&lt;name&gt;&quot;</span><br><span class="line">$ git config --global user.email &quot;&lt;email address&gt;&quot;</span><br><span class="line"></span><br><span class="line">&#x2F;&#x2F; 让 Git 输出语句显示颜色</span><br><span class="line">$ git config --global color.ui true</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">&#x2F;&#x2F; 创建版本库</span><br><span class="line">$ git init</span><br><span class="line"></span><br><span class="line">&#x2F;&#x2F; 当前 Git 状态</span><br><span class="line">$ git status</span><br><span class="line"></span><br><span class="line">&#x2F;&#x2F; 添加指定文件到暂存区，包括新增和修改</span><br><span class="line">$ git add &lt;file&gt;</span><br><span class="line"></span><br><span class="line">&#x2F;&#x2F; 添加工作区所有修改到暂存区，包括新增、修改、删除</span><br><span class="line">$ git add -A</span><br><span class="line"></span><br><span class="line">&#x2F;&#x2F; 提交暂存区内容到当前分支</span><br><span class="line">$ git commit -m &quot;&lt;descriptive message&gt;&quot;</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line">&#x2F;&#x2F; 工作区和暂存区的不同</span><br><span class="line">$ git diff</span><br><span class="line">$ git diff &lt;file&gt;</span><br><span class="line"></span><br><span class="line">&#x2F;&#x2F; 工作区和当前分支的不同</span><br><span class="line">$ git diff HEAD</span><br><span class="line">$ git diff HEAD &lt;file&gt;</span><br><span class="line"></span><br><span class="line">&#x2F;&#x2F; 暂存区和当前分支的不同</span><br><span class="line">$ git diff --staged</span><br><span class="line">$ git diff --staged &lt;file&gt;</span><br><span class="line"></span><br><span class="line">&#x2F;&#x2F; 查看历史提交记录</span><br><span class="line">$ git log</span><br><span class="line"></span><br><span class="line">&#x2F;&#x2F; 这几个参数的意义：--graph 显示分支合并图，--pretty&#x3D;oneline 只显示一行简化信息 --abbrev-commit 提交的版本号只显示前面 7 位</span><br><span class="line">$ git log --graph --pretty&#x3D;oneline --abbrev-commit</span><br><span class="line"></span><br><span class="line">&#x2F;&#x2F; 查看每一次命令</span><br><span class="line">$ git reflog</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">&#x2F;&#x2F; 回到上一个提交的版本，工作区保持原状</span><br><span class="line">$ git reset HEAD^</span><br><span class="line"></span><br><span class="line">&#x2F;&#x2F; 回到上一个提交的版本，工作区和暂存区都刷新</span><br><span class="line">$ git reset --hard HEAD^</span><br><span class="line"></span><br><span class="line">&#x2F;&#x2F; reset 有三种情况</span><br><span class="line">&#x2F;&#x2F; --mixed：会影响到暂存区和历史记录区，也是默认选项</span><br><span class="line">&#x2F;&#x2F; --soft：只影响历史记录区</span><br><span class="line">&#x2F;&#x2F; --hard：影响工作区、暂存区和历史记录区</span><br><span class="line"></span><br><span class="line">&#x2F;&#x2F; 将工作区修改撤销到上次 add 或者 commit 时的状态，如果文件名和分支名没有冲突 -- 可以省略</span><br><span class="line">$ git checkout -- &lt;file&gt;</span><br><span class="line"></span><br><span class="line">&#x2F;&#x2F; 如果已经添加到暂存区，希望恢复到上次 commit 的状态，可先进行这一步将暂存区内容撤销</span><br><span class="line">$ git reset HEAD &lt;file&gt;</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">&#x2F;&#x2F; 如果文件被删除，这个命令将这个改变添加到暂存区</span><br><span class="line">$ git rm &lt;file&gt;</span><br><span class="line"></span><br><span class="line">&#x2F;&#x2F; 将暂存区中这个文件删除</span><br><span class="line">$ git rm --cached &lt;file&gt;</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line">&#x2F;&#x2F; 为本地已有仓库添加远程仓库，远程仓库名为 origin （一个仓库可以添加多个远程仓库）</span><br><span class="line">$ git remote add origin git@github.com:michaelliao&#x2F;learngit.git</span><br><span class="line"></span><br><span class="line">&#x2F;&#x2F; 查看远程仓库</span><br><span class="line">$ git remote</span><br><span class="line"></span><br><span class="line">&#x2F;&#x2F; 查看远程仓库详细信息，可以查看是否有 push 权限</span><br><span class="line">git remote -v</span><br><span class="line"></span><br><span class="line">&#x2F;&#x2F; 将 master 分支推送到远程仓库 origin</span><br><span class="line">$ git push origin master</span><br><span class="line">&#x2F;&#x2F; 将 dev 分支推送到远程仓库 origin</span><br><span class="line">$ git push origin dev</span><br><span class="line"></span><br><span class="line">&#x2F;&#x2F; 第一次推送时，使用 -u 可以把本地的 master 分支和远程的 master 分支关联起来，以后就可以省略</span><br><span class="line">$ git push -u origin master</span><br><span class="line"></span><br><span class="line">&#x2F;&#x2F; 将一个远程仓库复制到本地</span><br><span class="line">$ git clone &lt;url&gt;</span><br><span class="line"></span><br><span class="line">&#x2F;&#x2F; 删除一个关联的远程仓库</span><br><span class="line">$ git remote remove origin</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br></pre></td><td class="code"><pre><span class="line">&#x2F;&#x2F; 查看分支</span><br><span class="line">$ git branch</span><br><span class="line"></span><br><span class="line">&#x2F;&#x2F; 新建分支</span><br><span class="line">$ git branch &lt;branch-name&gt;</span><br><span class="line"></span><br><span class="line">&#x2F;&#x2F; 切换到分支</span><br><span class="line">$ git checkout &lt;branch-name&gt;</span><br><span class="line">&#x2F;&#x2F; 切换到分支（新）</span><br><span class="line">$ git switch master</span><br><span class="line"></span><br><span class="line">&#x2F;&#x2F; 新建并切换到分支</span><br><span class="line">$ git checkout -b &lt;branch-name&gt;</span><br><span class="line">&#x2F;&#x2F; 新建并切换到分支（新）</span><br><span class="line">$ git switch -c dev</span><br><span class="line"></span><br><span class="line">&#x2F;&#x2F; 将指定分支合并到当前分支</span><br><span class="line">$ git merge &lt;branch-name&gt;</span><br><span class="line"></span><br><span class="line">&#x2F;&#x2F; 变基（主要用于将公共分支的变更合并的 feature 分支）</span><br><span class="line">$ git rebase &lt;branch-name&gt;</span><br><span class="line"></span><br><span class="line">&#x2F;&#x2F; 删除指定分支</span><br><span class="line">$ git branch -d &lt;branch-name&gt;</span><br><span class="line"></span><br><span class="line">&#x2F;&#x2F; 如果 dev 分支修改过程中，master 分支从没有修改过，那么 Git 默认会使用 Fast forward 模式合并，不会产生新的 commit，而是直接把 master 的指针指向 dev 分支最后的 commit 上，我们并不会在分支历史中看到分支信息，如果一定要看到，可以指定非 Fast forward 模式合并，这种模式合并，一定会新产生一个 commit</span><br><span class="line">&#x2F;&#x2F; 使用非 Fast forward 模式合并，附带 commit 的信息</span><br><span class="line">$ git merge --no-ff -m &quot;merge with no-ff&quot; dev</span><br><span class="line"></span><br><span class="line">&#x2F;&#x2F; 强行删除指定分支，即使其还没有合并到主分支</span><br><span class="line">$ git branch -D feature-vulcan</span><br><span class="line"></span><br><span class="line">&#x2F;&#x2F; 从远程仓库拉去 dev 分支到本地</span><br><span class="line">$ git checkout -b dev origin&#x2F;dev</span><br><span class="line"></span><br><span class="line">&#x2F;&#x2F; 将当前分支远程仓库最新的内容拉取下来</span><br><span class="line">$ git pull</span><br><span class="line"></span><br><span class="line">&#x2F;&#x2F; 更改远程分区的 HEAD 到 develop 分支</span><br><span class="line">git remote set-head origin develop</span><br><span class="line"></span><br><span class="line">&#x2F;&#x2F; 将本地的 dev 分支与远端的 dev 分支做关联（？）</span><br><span class="line">$ git branch --set-upstream-to&#x3D;origin&#x2F;dev dev</span><br><span class="line">&#x2F;&#x2F; 推送本地新建的 dev 分支到远端</span><br><span class="line">git push --set-upstream origin dev</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">(本段摘自廖雪峰 Git 教程)</span><br><span class="line">多人协作的工作模式通常是这样：</span><br><span class="line"></span><br><span class="line">首先，可以试图用git push origin branch-name推送自己的修改；</span><br><span class="line"></span><br><span class="line">如果推送失败，则因为远程分支比你的本地更新，需要先用git pull试图合并；</span><br><span class="line"></span><br><span class="line">如果合并有冲突，则解决冲突，并在本地提交；</span><br><span class="line"></span><br><span class="line">没有冲突或者解决掉冲突后，再用git push origin branch-name推送就能成功！</span><br><span class="line"></span><br><span class="line">&#x2F;&#x2F; 这部分不一定对，有的已经废弃了</span><br><span class="line">如果git pull提示“no tracking information”，则说明本地分支和远程分支的链接关系没有创建，用命令git branch --set-upstream-to&#x3D;origin&#x2F;dev dev。</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line">&#x2F;&#x2F; 暂时缓存当前工作区</span><br><span class="line">$ git stash</span><br><span class="line"></span><br><span class="line">&#x2F;&#x2F; 查看 stash 列表</span><br><span class="line">$ git stash list</span><br><span class="line"></span><br><span class="line">&#x2F;&#x2F; 恢复 stash 内容，但是 stash 并不删除</span><br><span class="line">$ git stash apply stash@&#123;0&#125;</span><br><span class="line"></span><br><span class="line">&#x2F;&#x2F; 删除 stash 内容</span><br><span class="line">$ git stash drop</span><br><span class="line"></span><br><span class="line">&#x2F;&#x2F; 恢复 stash 最近的内容，并删除</span><br><span class="line">$ git stash pop</span><br><span class="line"></span><br><span class="line">&#x2F;&#x2F; 将某个提交的变化复制到当前分支</span><br><span class="line">$ git cherry-pick 4c805e2</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><span class="line">&#x2F;&#x2F; 查看所有标签</span><br><span class="line">$ git tag</span><br><span class="line"></span><br><span class="line">&#x2F;&#x2F; 为当前分支最新提交打上标签</span><br><span class="line">$ git tag v1.0</span><br><span class="line"></span><br><span class="line">&#x2F;&#x2F; 为历史提交中的某次提交打上标签</span><br><span class="line">$ git tag v0.9 &lt;commit id&gt;</span><br><span class="line"></span><br><span class="line">&#x2F;&#x2F; 查看指定标签的信息</span><br><span class="line">$ git show &lt;tag name&gt;</span><br><span class="line"></span><br><span class="line">&#x2F;&#x2F; 创建标签的过程中添加标签的说明</span><br><span class="line">$ git tag -a v0.1 -m &quot;version 0.1 released&quot; 3628164</span><br><span class="line"></span><br><span class="line">&#x2F;&#x2F; 删除指定标签</span><br><span class="line">$ git tag -d &lt;tag name&gt;</span><br><span class="line"></span><br><span class="line">&#x2F;&#x2F; 推送一个本地标签</span><br><span class="line">$ git push origin &lt;tag name&gt;</span><br><span class="line"></span><br><span class="line">&#x2F;&#x2F; 推送全部未推送过的本地标签</span><br><span class="line">$ git push origin --tags</span><br><span class="line"></span><br><span class="line">&#x2F;&#x2F; 删除一个远程标签</span><br><span class="line">$ git push origin :refs&#x2F;tags&#x2F;&lt;tag name&gt;</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">&#x2F;&#x2F; 给常用 Git 命令设置别名，以快捷输入，这个依然是保存在家目录的 .gitconfig 文件中</span><br><span class="line">$ git config --global alias.st status</span><br><span class="line">$ git config --global alias.co checkout</span><br><span class="line">$ git config --global alias.ci commit</span><br><span class="line">$ git config --global alias.br branch</span><br><span class="line">$ git config --global alias.unstage &#39;reset HEAD&#39;</span><br><span class="line">$ git config --global alias.last &#39;log -1&#39;</span><br><span class="line">$ git config --global alias.lg &quot;log --color --graph --pretty&#x3D;format:&#39;%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr) %C(bold blue)&lt;%an&gt;%Creset&#39; --abbrev-commit&quot;</span><br></pre></td></tr></table></figure>
+
+<p>链接：</p>
+<p><a target="_blank" rel="noopener" href="https://www.liaoxuefeng.com/wiki/0013739516305929606dd18361248578c67b8067c8c017b000">廖雪峰的 Git 教程</a>：Git 入门最好的教程。</p>
+<p><a target="_blank" rel="noopener" href="http://nvie.com/posts/a-successful-git-branching-model/">Git Flow</a>：Git Flow 的原文，里面的图片一目了然。</p>
+<p><a target="_blank" rel="noopener" href="https://services.github.com/on-demand/downloads/github-git-cheat-sheet.pdf">GitHub Git Cheat Sheet</a>：各种 Git 基本操作的命令。</p>
+<p><a target="_blank" rel="noopener" href="https://mp.weixin.qq.com/s/mbuApV5nZaJxep9M-i_UFA">工作流一目了然，看小姐姐用动图展示 10 大 Git 命令</a>：一些 Git 操作的动图解释。</p>
+<p><a target="_blank" rel="noopener" href="https://mp.weixin.qq.com/s/tEC4VSy0xOA0hmlV4qstJw">面试中的那些 Git 问题 - 基础部分</a></p>
+
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
     <link itemprop="mainEntityOfPage" href="https://blog.qiweipeng.com/2018/04/06/gitignore-ds_store/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -1204,91 +1297,6 @@
   
   
 
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="https://blog.qiweipeng.com/2017/06/12/swift-security-tips/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.gif">
-      <meta itemprop="name" content="齐卫鹏">
-      <meta itemprop="description" content="">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="齐卫鹏的博客">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2017/06/12/swift-security-tips/" class="post-title-link" itemprop="url">从一些细节谈谈为什么说 Swift 是一门更安全的语言</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">发表于</span>
-
-              <time title="创建时间：2017-06-12 20:03:46" itemprop="dateCreated datePublished" datetime="2017-06-12T20:03:46+08:00">2017-06-12</time>
-            </span>
-              <span class="post-meta-item">
-                <span class="post-meta-item-icon">
-                  <i class="far fa-calendar-check"></i>
-                </span>
-                <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2020-12-01 16:09:51" itemprop="dateModified" datetime="2020-12-01T16:09:51+08:00">2020-12-01</time>
-              </span>
-
-          
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <p>学习 Swift 的过程中，发现这门新语言在设计上确实融入了很多思考，Swift 宣称相对 Objective-C 是一门更安全的语言，那么本文就从语法设计上，举几个小例子谈谈 Swift 为了安全都做了哪些努力。</p>
-<h2 id="Swift-中不允许溢出错误"><a href="#Swift-中不允许溢出错误" class="headerlink" title="Swift 中不允许溢出错误"></a>Swift 中不允许溢出错误</h2><p>在 Objective-C 中，如下代码会警告但是可以编译通过，打印结果为 -128，理解进制的就会知道，因为发生了溢出（int8_t 只能保存 -128 到 127 的整数），127 在二进制层面加 1 的结果就是 -128。</p>
-<figure class="highlight objc"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">int8_t aInt8 = <span class="number">128</span>;</span><br><span class="line"><span class="built_in">NSLog</span>(<span class="string">@&quot;%d&quot;</span>, aInt8); <span class="comment">// -128</span></span><br></pre></td></tr></table></figure>
-
-<p>溢出在 C 语言以及 Objective-C 中都是被允许的，但是潜在的 Bug 也会因此产生，大部分开发中我们其实更希望这种情况被及时提醒而不是编译通过，最终给我们一个莫名其妙的值。这种 Bug 往往也难以寻找。</p>
-<p>而在 Swift 中，溢出是在语法检查的时候就无法编译通过的，如下面代码：</p>
-<figure class="highlight swift"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">let</span> aInt8: <span class="type">Int8</span> = <span class="number">128</span> <span class="comment">// 错误信息：Integer literal &#x27;128&#x27; overflows when stored into &#x27;Int8&#x27;</span></span><br></pre></td></tr></table></figure>
-
-<h2 id="Swift-不提供隐式的类型转换"><a href="#Swift-不提供隐式的类型转换" class="headerlink" title="Swift 不提供隐式的类型转换"></a>Swift 不提供隐式的类型转换</h2><p>与 Objective-C 不同，Swift 是一门强类型语言，我们甚至无法给一个整型变量赋值一个小数，更别说像 Objective-C 那样任意指针指向任意对象了。但是我们不必在所有情况下显式声明变量类型，是因为 Swift 为我们提供了 <code>类型推断（Type Inference）</code>，如下面代码：</p>
-<figure class="highlight swift"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">let</span> aDouble = <span class="number">1.5</span> <span class="comment">// 类型推断为 Double 类型</span></span><br></pre></td></tr></table></figure>
-
-<p>但是在类型转换上，Swift 要求极为严格，一个 Int 类型绝对是无法和一个 Double 类型相加的，必须显式地类型转换：</p>
-<figure class="highlight swift"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">let</span> x: <span class="type">Double</span> = <span class="number">1.2</span></span><br><span class="line"><span class="keyword">let</span> y: <span class="type">Int</span> = <span class="number">5</span></span><br><span class="line"></span><br><span class="line"><span class="comment">// 必须显式进行类型转换,避免潜在 Bug 出现</span></span><br><span class="line"><span class="keyword">let</span> sum = <span class="type">Int</span>(x) + y</span><br></pre></td></tr></table></figure>
-
-<h2 id="赋值运算取消返回值"><a href="#赋值运算取消返回值" class="headerlink" title="赋值运算取消返回值"></a>赋值运算取消返回值</h2><p>我们看下面代码：</p>
-<figure class="highlight objc"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">NSString</span> *aString = <span class="literal">nil</span>;</span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span> (aString == <span class="literal">nil</span>) &#123;</span><br><span class="line">    <span class="built_in">NSLog</span>(<span class="string">@&quot;aString is nil.&quot;</span>); <span class="comment">// 打印 aString is nil.</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p>这段代码本身没有意义，目的在于说明一个程序员可能发生的错误，这就是不小心把 <code>==</code> 写成了 <code>=</code>，结果会截然不同，但是 Bug 同样难以寻找。因此在有的 Objective-C 代码规范中会有这样的规定，建议上面代码中的 condition 部分写成 <code>nil == aString</code> 以避免类似 Bug 的发生。</p>
-<p>而在 Swift 中，首先是没有非 0 即真的概念的（Swift 认为，0 应该是和其他整数一样的，不应该用它来表示空，因此发明了可选型），其次，赋值运算是没有返回值的，这样把它放在 if 语句中就直接会报错。</p>
-<h2 id="for-in、if-else、switch-等语句中的大括号不可省略"><a href="#for-in、if-else、switch-等语句中的大括号不可省略" class="headerlink" title="for-in、if-else、switch 等语句中的大括号不可省略"></a>for-in、if-else、switch 等语句中的大括号不可省略</h2><p>记得听过一个故事，苹果的一位程序员因为 if 语句只有一句代码所以没有加大括号，后期添加代码时仍然忘记添加，因此导致 Bug。Swift 中所有这些语句均必须添加大括号。</p>
-<h2 id="结尾"><a href="#结尾" class="headerlink" title="结尾"></a>结尾</h2><p>本文只是从一些小细节入手去谈 Swift 的安全性，其更多地安全性的表现应该是<code>强类型</code>、<code>可选型</code>等等，这些内容值得单独去讲，之后会专门写文章去理解相关的概念。</p>
-
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
 
   
   <nav class="pagination">
@@ -1358,12 +1366,12 @@
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">34</span>
+          <span class="site-state-item-count">35</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
       <div class="site-state-item site-state-tags">
-        <span class="site-state-item-count">8</span>
+        <span class="site-state-item-count">10</span>
         <span class="site-state-item-name">标签</span>
       </div>
   </nav>
