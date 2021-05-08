@@ -146,6 +146,132 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://blog.qiweipeng.com/2021/03/17/data-structure-heap-and-priority-queue/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="齐卫鹏">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="齐卫鹏的博客">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2021/03/17/data-structure-heap-and-priority-queue/" class="post-title-link" itemprop="url">数据结构学习笔记 - 09 堆和优先队列</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2021-03-17 10:57:16" itemprop="dateCreated datePublished" datetime="2021-03-17T10:57:16+08:00">2021-03-17</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2021-03-28 01:25:21" itemprop="dateModified" datetime="2021-03-28T01:25:21+08:00">2021-03-28</time>
+              </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <h2 id="优先队列介绍"><a href="#优先队列介绍" class="headerlink" title="优先队列介绍"></a>优先队列介绍</h2><p>优先队列也是一个队列，因此也适用于之前实现的队列接口。不过优先队列出队永远需要优先级对高的。</p>
+<p>优先队列针对的是动态的情况，如果是静态的，那么只需要排序一次即可。</p>
+<p>依然可以使用之前实现普通队列的方式实现优先队列，即使用数组或链表这样的线性结构实现优先队列。只不过无法再像实现普通队列那样，使入队和出队的复杂度都为 O(1)。</p>
+<p>使用堆来实现优先队列，可以使得入队和出队操作都为 O(logn) 级别。</p>
+<table>
+<thead>
+<tr>
+<th></th>
+<th>入队</th>
+<th>出队</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>专门维护一个顺序的线性结构，即入队时进行排序</td>
+<td>O(n)</td>
+<td>O(1)</td>
+</tr>
+<tr>
+<td>普通队列出队操作时遍历找到优先级最高的元素</td>
+<td>O(1)</td>
+<td>O(n)</td>
+</tr>
+<tr>
+<td>使用堆实现</td>
+<td>O(logn)</td>
+<td>O(logn)</td>
+</tr>
+</tbody></table>
+<h2 id="堆的介绍"><a href="#堆的介绍" class="headerlink" title="堆的介绍"></a>堆的介绍</h2><ul>
+<li>满二叉树，其所有非叶子节点均既有左孩子又有右孩子。</li>
+<li>完全二叉树，其不一定是一颗满二叉树，但是其不满的部分一定是在树的右下侧。也就是除了最底层之外，上面的是一个满二叉树，最底层从左开始放置元素。</li>
+<li>二叉堆就是一个完全二叉树。</li>
+<li>最大堆：堆中某个节点的值总是不大于其父节点的值（响应也有最小堆）。需要注意的是，这个定义没有要求较下层的某个节点一定不会大于较上层的所有节点。</li>
+</ul>
+<p>对于完全二叉树来说，通过层序遍历，可以将节点放入一个数组中。实际上堆的存储结构也是使用一个数组最为合适。</p>
+<p>当使用一个数组表示一个堆的时候，根节点放在第一个位置，索引为 0。假如某节点索引为 i，其左孩子节点索引就是 2i + 1，右孩子节点索引就是 2i + 2，其父节点索引就是 (i - 1) / 2。如果为了表示方便，也可以空一个位置，将根节点放在索引为 1 的位置，那么假如某节点索引为 i，其左孩子节点索引就是 2i，右孩子节点索引就是 2i + 1，其父节点索引就是 i / 2。</p>
+<table>
+<thead>
+<tr>
+<th>根节点索引</th>
+<th>当前节点索引</th>
+<th>左孩子索引</th>
+<th>右孩子索引</th>
+<th>父节点索引</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>0</td>
+<td>i</td>
+<td>2i + 1</td>
+<td>2i + 2</td>
+<td>(i - 1) / 2</td>
+</tr>
+<tr>
+<td>1</td>
+<td>i</td>
+<td>2i</td>
+<td>2i + 1</td>
+<td>i / 2</td>
+</tr>
+</tbody></table>
+<p><strong>对于完全二叉树，寻找最后一个非叶子节点的索引就是找最后一个节点的父亲节点。</strong></p>
+
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
     <link itemprop="mainEntityOfPage" href="https://blog.qiweipeng.com/2021/02/28/my-react-native-tutorial/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -169,10 +295,16 @@
                 <i class="far fa-calendar"></i>
               </span>
               <span class="post-meta-item-text">发表于</span>
-              
 
-              <time title="创建时间：2021-02-28 16:41:18 / 修改时间：18:33:52" itemprop="dateCreated datePublished" datetime="2021-02-28T16:41:18+08:00">2021-02-28</time>
+              <time title="创建时间：2021-02-28 16:41:18" itemprop="dateCreated datePublished" datetime="2021-02-28T16:41:18+08:00">2021-02-28</time>
             </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2021-05-08 21:17:35" itemprop="dateModified" datetime="2021-05-08T21:17:35+08:00">2021-05-08</time>
+              </span>
 
           
 
@@ -201,6 +333,7 @@
 <p><a target="_blank" rel="noopener" href="https://www.npmjs.com/">npm | build amazing things</a></p>
 <p><a target="_blank" rel="noopener" href="https://babeljs.io/">Babel · The compiler for next generation JavaScript</a></p>
 <p><a target="_blank" rel="noopener" href="https://jestjs.io/">Jest · 🃏 Delightful JavaScript Testing</a></p>
+<p><a target="_blank" rel="noopener" href="https://typicode.github.io/husky/#/">Husky - Git hooks</a></p>
 <h2 id="相关中文站点"><a href="#相关中文站点" class="headerlink" title="相关中文站点"></a>相关中文站点</h2><p><a target="_blank" rel="noopener" href="https://www.tslang.cn/">TypeScript中文网 · TypeScript——JavaScript的超集</a></p>
 <p><a target="_blank" rel="noopener" href="https://zh-hans.reactjs.org/">React 官方中文文档 – 用于构建用户界面的 JavaScript 库</a></p>
 <p><a target="_blank" rel="noopener" href="https://reactnative.cn/">React Native 中文网 · 使用React来编写原生应用的框架</a></p>
@@ -1046,94 +1179,6 @@
   
   
 
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="https://blog.qiweipeng.com/2020/10/10/homebrew-usage/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.gif">
-      <meta itemprop="name" content="齐卫鹏">
-      <meta itemprop="description" content="">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="齐卫鹏的博客">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2020/10/10/homebrew-usage/" class="post-title-link" itemprop="url">Homebrew 使用简介</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">发表于</span>
-
-              <time title="创建时间：2020-10-10 16:22:59" itemprop="dateCreated datePublished" datetime="2020-10-10T16:22:59+08:00">2020-10-10</time>
-            </span>
-              <span class="post-meta-item">
-                <span class="post-meta-item-icon">
-                  <i class="far fa-calendar-check"></i>
-                </span>
-                <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2020-12-01 16:09:51" itemprop="dateModified" datetime="2020-12-01T16:09:51+08:00">2020-12-01</time>
-              </span>
-
-          
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <h2 id="环境变量"><a href="#环境变量" class="headerlink" title="环境变量"></a>环境变量</h2><p>系统在加载 <code>~/.zshrc</code>（maxOS Catalina 之前是 <code>~/.bash_profile</code>）之前还会加载：</p>
-<ul>
-<li><code>/etc/profile</code></li>
-<li><code>/etc/paths</code>（系统默认指定的一系列 <code>PATH</code>）</li>
-</ul>
-<p>使用命令 <code>vi /etc/paths</code> 查看，内容如下：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">&#x2F;usr&#x2F;local&#x2F;bin</span><br><span class="line">&#x2F;usr&#x2F;bin</span><br><span class="line">&#x2F;bin</span><br><span class="line">&#x2F;usr&#x2F;sbin</span><br><span class="line">&#x2F;sbin</span><br></pre></td></tr></table></figure>
-
-<p>输入 <code>echo $PATH</code> 可以查看当前的 <code>PATH</code>，会显示 <code>/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin:/Library/Apple/usr/bin</code>（最后一个暂不知从哪里加载），可以看到，系统默认就是按照这样的顺序依次从这几个目录中读取的，也就是说，<code>/usr/local/bin</code> 目前是系统最优先读取的路径。</p>
-<p>如果在 <code>~/.zshrc</code> 设置就会优先从该文件的 <code>PATH</code> 加载，因为 <code>~/.zshrc</code> 是后被系统加载的。</p>
-<h2 id="Homebrew-原理"><a href="#Homebrew-原理" class="headerlink" title="Homebrew 原理"></a>Homebrew 原理</h2><p>macOS 自带的软件默认是放在 <code>/usr/bin</code> 路径下的，如在该目录可以找到系统自带的 <code>git</code>、<code>gem</code> 等。而 <code>/usr/bin</code> 路径在系统的读取顺序上是低于 <code>/usr/local/bin</code> 路径的。</p>
-<p><code>Homebrew</code> 就是利用了系统更优先读取 <code>/usr/local/bin</code> 的特点，先把包安装到同路径的 <code>Cellar</code> 文件夹下，然后使用软链接的方式，在 <code>bin</code> 文件夹下创建软链接，这样系统就可以优先找到 <code>brew</code> 安装的包了。</p>
-<h2 id="Homebrew-安装"><a href="#Homebrew-安装" class="headerlink" title="Homebrew 安装"></a>Homebrew 安装</h2><p>安装 <a target="_blank" rel="noopener" href="https://brew.sh/">Homebrew</a>：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ &#x2F;bin&#x2F;bash -c &quot;$(curl -fsSL https:&#x2F;&#x2F;raw.githubusercontent.com&#x2F;Homebrew&#x2F;install&#x2F;master&#x2F;install.sh)&quot;</span><br></pre></td></tr></table></figure>
-
-<p>它是使用系统自带的 <code>ruby</code> 进行安装的。</p>
-<p>使用 <code>brew</code> 去可以安装 <code>python</code>、<code>git</code>、<code>java</code> 等等。虽然系统都默认提供了这些，但是版本往往不是最新的，我们也不建议使用 <code>sudo</code> 去更新修改系统的内容。于是完全可以使用 <code>brew</code> 去重新安装维护一套，更新也更方便更安全。这样基本就可以不再使用系统默认提供的一些包了。</p>
-<p>安装某些软件时候，处于避免冲突的考虑，<code>brew</code> 不会自动在 <code>/usr/local/bin/</code> 下创建软链接（如 <code>ruby</code>）。解决方法有两种：一是在 <code>~/.bash_profile</code> 下为新安装的添加环境变量；二是手动在 <code>/usr/local/bin/</code> 下创建软链接（推荐），如输入命令 <code>ln -s /usr/local/Cellar/ruby/2.6.3/bin/ruby /usr/local/bin/ruby</code>，就可以把已经使用 <code>brew</code> 安装好的 <code>ruby</code> 在<code>/usr/local/bin/</code> 下创建软链接。</p>
-<h2 id="Homebrew-使用"><a href="#Homebrew-使用" class="headerlink" title="Homebrew 使用"></a>Homebrew 使用</h2><p>常用命令：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><span class="line">$ brew list &#x2F;&#x2F; 安装的软件列表</span><br><span class="line"></span><br><span class="line">$ brew install &lt;name&gt; &#x2F;&#x2F; 安装某个包</span><br><span class="line"></span><br><span class="line">$ brew uninstall &lt;name&gt; &#x2F;&#x2F; 卸载安装的软件</span><br><span class="line"></span><br><span class="line">$ brew update &#x2F;&#x2F; 更新 Homebrew 本身</span><br><span class="line"></span><br><span class="line">$ brew outdated 查看过期软件</span><br><span class="line"></span><br><span class="line">$ brew upgrade &lt;formula&gt; &#x2F;&#x2F; 更新指定软件</span><br><span class="line"></span><br><span class="line">$ brew pin &lt;formula&gt; 指定某软件保持在当前版本不被更新</span><br><span class="line"></span><br><span class="line">$ brew unpin &lt;formula&gt; 取消某软件保持在当前版本</span><br><span class="line"></span><br><span class="line">$ brew --cache 查看 Homebrew 缓存目录</span><br><span class="line"></span><br><span class="line">&#x2F;&#x2F; cask 相关</span><br><span class="line"></span><br><span class="line">$ brew cask install &lt;name&gt; &#x2F;&#x2F; 使用 cask 安装软件</span><br><span class="line"></span><br><span class="line">$ brew list --cask &#x2F;&#x2F; 使用 cask 命令安装的应用列表</span><br><span class="line"></span><br><span class="line">$ brew cask uninstall &lt;name&gt; &#x2F;&#x2F; 卸载使用 cask 命令安装的应用</span><br><span class="line"></span><br><span class="line">$ brew cask search &lt;name&gt; &#x2F;&#x2F; 查找</span><br></pre></td></tr></table></figure>
-
-<p>避免 Homebrew 自动更新：在 <code>~/.zshrc</code> 文件中写入 <code>export HOMEBREW_NO_AUTO_UPDATE=true</code>。</p>
-<p>安装 <a target="_blank" rel="noopener" href="https://github.com/buo/homebrew-cask-upgrade">homebrew-cask-upgrade</a> 方便 cask 应用更新：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">$ brew tap buo&#x2F;cask-upgrade &#x2F;&#x2F; 安装</span><br><span class="line"></span><br><span class="line">$ brew cu -a &#x2F;&#x2F; 更新所有</span><br><span class="line"></span><br><span class="line">$ brew cu &lt;name&gt; -a 更新指定</span><br></pre></td></tr></table></figure>
-
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
 
   
   <nav class="pagination">
@@ -1203,7 +1248,7 @@
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">35</span>
+          <span class="site-state-item-count">36</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>

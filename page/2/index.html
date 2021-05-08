@@ -146,6 +146,94 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://blog.qiweipeng.com/2020/10/10/homebrew-usage/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="齐卫鹏">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="齐卫鹏的博客">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2020/10/10/homebrew-usage/" class="post-title-link" itemprop="url">Homebrew 使用简介</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2020-10-10 16:22:59" itemprop="dateCreated datePublished" datetime="2020-10-10T16:22:59+08:00">2020-10-10</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2021-04-19 11:23:21" itemprop="dateModified" datetime="2021-04-19T11:23:21+08:00">2021-04-19</time>
+              </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <h2 id="环境变量"><a href="#环境变量" class="headerlink" title="环境变量"></a>环境变量</h2><p>系统在加载 <code>~/.zshrc</code>（macOS Catalina 之前是 <code>~/.bash_profile</code>）之前还会加载：</p>
+<ul>
+<li><code>/etc/profile</code></li>
+<li><code>/etc/paths</code>（系统默认指定的一系列 <code>PATH</code>）</li>
+</ul>
+<p>使用命令 <code>vi /etc/paths</code> 查看，内容如下：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">&#x2F;usr&#x2F;local&#x2F;bin</span><br><span class="line">&#x2F;usr&#x2F;bin</span><br><span class="line">&#x2F;bin</span><br><span class="line">&#x2F;usr&#x2F;sbin</span><br><span class="line">&#x2F;sbin</span><br></pre></td></tr></table></figure>
+
+<p>输入 <code>echo $PATH</code> 可以查看当前的 <code>PATH</code>，会显示 <code>/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin:/Library/Apple/usr/bin</code>（最后一个暂不知从哪里加载），可以看到，系统默认就是按照这样的顺序依次从这几个目录中读取的，也就是说，<code>/usr/local/bin</code> 目前是系统最优先读取的路径。</p>
+<p>如果在 <code>~/.zshrc</code> 设置就会优先从该文件的 <code>PATH</code> 加载，因为 <code>~/.zshrc</code> 是后被系统加载的。</p>
+<h2 id="Homebrew-原理"><a href="#Homebrew-原理" class="headerlink" title="Homebrew 原理"></a>Homebrew 原理</h2><p>macOS 自带的软件默认是放在 <code>/usr/bin</code> 路径下的，如在该目录可以找到系统自带的 <code>git</code>、<code>gem</code> 等。而 <code>/usr/bin</code> 路径在系统的读取顺序上是低于 <code>/usr/local/bin</code> 路径的。</p>
+<p><code>Homebrew</code> 就是利用了系统更优先读取 <code>/usr/local/bin</code> 的特点，先把包安装到同路径的 <code>Cellar</code> 文件夹下，然后使用软链接的方式，在 <code>bin</code> 文件夹下创建软链接，这样系统就可以优先找到 <code>brew</code> 安装的包了。</p>
+<h2 id="Homebrew-安装"><a href="#Homebrew-安装" class="headerlink" title="Homebrew 安装"></a>Homebrew 安装</h2><p>安装 <a target="_blank" rel="noopener" href="https://brew.sh/">Homebrew</a>：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ &#x2F;bin&#x2F;bash -c &quot;$(curl -fsSL https:&#x2F;&#x2F;raw.githubusercontent.com&#x2F;Homebrew&#x2F;install&#x2F;master&#x2F;install.sh)&quot;</span><br></pre></td></tr></table></figure>
+
+<p>它是使用系统自带的 <code>ruby</code> 进行安装的。</p>
+<p>使用 <code>brew</code> 去可以安装 <code>python</code>、<code>git</code>、<code>java</code> 等等。虽然系统都默认提供了这些，但是版本往往不是最新的，我们也不建议使用 <code>sudo</code> 去更新修改系统的内容。于是完全可以使用 <code>brew</code> 去重新安装维护一套，更新也更方便更安全。这样基本就可以不再使用系统默认提供的一些包了。</p>
+<p>安装某些软件时候，处于避免冲突的考虑，<code>brew</code> 不会自动在 <code>/usr/local/bin/</code> 下创建软链接（如 <code>ruby</code>）。解决方法有两种：一是在 <code>~/.bash_profile</code> 下为新安装的添加环境变量；二是手动在 <code>/usr/local/bin/</code> 下创建软链接（推荐），如输入命令 <code>ln -s /usr/local/Cellar/ruby/2.6.3/bin/ruby /usr/local/bin/ruby</code>，就可以把已经使用 <code>brew</code> 安装好的 <code>ruby</code> 在<code>/usr/local/bin/</code> 下创建软链接。</p>
+<h2 id="Homebrew-使用"><a href="#Homebrew-使用" class="headerlink" title="Homebrew 使用"></a>Homebrew 使用</h2><p>常用命令：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><span class="line">$ brew list &#x2F;&#x2F; 安装的软件列表</span><br><span class="line"></span><br><span class="line">$ brew install &lt;name&gt; &#x2F;&#x2F; 安装某个包</span><br><span class="line"></span><br><span class="line">$ brew uninstall &lt;name&gt; &#x2F;&#x2F; 卸载安装的软件</span><br><span class="line"></span><br><span class="line">$ brew update &#x2F;&#x2F; 更新 Homebrew 本身</span><br><span class="line"></span><br><span class="line">$ brew outdated 查看过期软件</span><br><span class="line"></span><br><span class="line">$ brew upgrade &lt;formula&gt; &#x2F;&#x2F; 更新指定软件</span><br><span class="line"></span><br><span class="line">$ brew pin &lt;formula&gt; 指定某软件保持在当前版本不被更新</span><br><span class="line"></span><br><span class="line">$ brew unpin &lt;formula&gt; 取消某软件保持在当前版本</span><br><span class="line"></span><br><span class="line">$ brew --cache 查看 Homebrew 缓存目录</span><br><span class="line"></span><br><span class="line">&#x2F;&#x2F; cask 相关</span><br><span class="line"></span><br><span class="line">$ brew cask install &lt;name&gt; &#x2F;&#x2F; 使用 cask 安装软件</span><br><span class="line"></span><br><span class="line">$ brew list --cask &#x2F;&#x2F; 使用 cask 命令安装的应用列表</span><br><span class="line"></span><br><span class="line">$ brew cask uninstall &lt;name&gt; &#x2F;&#x2F; 卸载使用 cask 命令安装的应用</span><br><span class="line"></span><br><span class="line">$ brew cask search &lt;name&gt; &#x2F;&#x2F; 查找</span><br></pre></td></tr></table></figure>
+
+<p>避免 Homebrew 自动更新：在 <code>~/.zshrc</code> 文件中写入 <code>export HOMEBREW_NO_AUTO_UPDATE=true</code>。</p>
+<p>安装 <a target="_blank" rel="noopener" href="https://github.com/buo/homebrew-cask-upgrade">homebrew-cask-upgrade</a> 方便 cask 应用更新：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">$ brew tap buo&#x2F;cask-upgrade &#x2F;&#x2F; 安装</span><br><span class="line"></span><br><span class="line">$ brew cu -a &#x2F;&#x2F; 更新所有</span><br><span class="line"></span><br><span class="line">$ brew cu &lt;name&gt; -a 更新指定</span><br></pre></td></tr></table></figure>
+
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
     <link itemprop="mainEntityOfPage" href="https://blog.qiweipeng.com/2020/10/10/hexo-deployment/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -1300,99 +1388,6 @@
   
   
 
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="https://blog.qiweipeng.com/2020/03/24/swift-package-usage/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.gif">
-      <meta itemprop="name" content="齐卫鹏">
-      <meta itemprop="description" content="">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="齐卫鹏的博客">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2020/03/24/swift-package-usage/" class="post-title-link" itemprop="url">Swift Package 的创建和使用</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">发表于</span>
-
-              <time title="创建时间：2020-03-24 20:56:51" itemprop="dateCreated datePublished" datetime="2020-03-24T20:56:51+08:00">2020-03-24</time>
-            </span>
-              <span class="post-meta-item">
-                <span class="post-meta-item-icon">
-                  <i class="far fa-calendar-check"></i>
-                </span>
-                <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2020-12-01 16:09:51" itemprop="dateModified" datetime="2020-12-01T16:09:51+08:00">2020-12-01</time>
-              </span>
-
-          
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <p>Xcode 11 已经有了对 Swift Package 的支持，今后使用 Swift 编写的 iOS 项目就可以开始尝试使用 SwiftPM 逐步替换 CocoaPods 和 Carthage 了。常用的使用 Swift 编写的三方库如 <code>Alamofire</code>、<code>Moya</code> 等也都已经支持了 SwiftPM。</p>
-<p>本文通过一个例子来介绍 Swift Package 的创建、发布以及使用。</p>
-<h2 id="准备工作"><a href="#准备工作" class="headerlink" title="准备工作"></a>准备工作</h2><p>由于打算将创建的 Package 发布到 Github，首先需要在 Xcode 上登陆 Github，这将方便后续的上传和下载集成。</p>
-<h2 id="Swift-Package-的创建"><a href="#Swift-Package-的创建" class="headerlink" title="Swift Package 的创建"></a>Swift Package 的创建</h2><p>Xcode 快捷键 <code>shift + control + command + N</code> 可以快速创建一个 Swift Package，我们命名为 <code>Hello</code>。创建项目的时候勾选 <code>Create Git repository on my Mac</code>，因为后续还要上传 Github。</p>
-<p>创建后，目录中会有一个 <code>Package.swift</code> 文件，一个 <code>Sources</code> 文件夹包含着这个包将要包含的代码，以及一个 <code>Tests</code> 文件夹包含测试文件。</p>
-<p>其中，<code>Hello.swift</code> 文件中代码为</p>
-<figure class="highlight swift"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">struct</span> <span class="title">Hello</span> </span>&#123;</span><br><span class="line">    <span class="keyword">var</span> text = <span class="string">&quot;Hello, World!&quot;</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p>由于做成 Package 之后就是跨模块访问，我们加上访问控制关键字，并创建一个构造器（因为默认的构造器是 internal 关键字），然后增加一个方法。</p>
-<figure class="highlight swift"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">struct</span> <span class="title">Hello</span> </span>&#123;</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">var</span> text: <span class="type">String</span></span><br><span class="line">    </span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">init</span>(with text: <span class="type">String</span> = <span class="string">&quot;Hell, World!&quot;</span>) &#123; <span class="comment">// there is a bug.</span></span><br><span class="line">        <span class="keyword">self</span>.text = text</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">public</span> <span class="function"><span class="keyword">func</span> <span class="title">sayHi</span><span class="params">()</span></span> -&gt; <span class="type">String</span> &#123;</span><br><span class="line">        <span class="keyword">return</span> text</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p>之后我们可以提交并上传了，但是这里我们预留了一个 bug。</p>
-<p>我们将代码推到 Github 上的流程，可以先在 Github 上创建一个空项目，然后本地和远程仓库关联，也可以直接通过 Xcode 在 Github 上创建一个远程仓库（因为已经在 Xcode 上登陆了 Github，这一步非常简单）。这个仓库完全可以设置为私有的，也就是说我们为自己项目创建的 Package 是可以托管在 Github 上的。</p>
-<p>下一步是为当前 Git 版本打标签，这将成为 Package 的版本号。需要说明的是，这个版本号是遵守语义化版本控制规范的，具体可参考 <a target="_blank" rel="noopener" href="https://semver.org/">Semantic Versioning 2.0.0</a>。打了标签之后，记得还需要 Push 一次，将标签同步到远程仓库中。至此，我们已经创建一个 Swift Package 并上传到了 Github。</p>
-<h2 id="Swift-Package-的使用"><a href="#Swift-Package-的使用" class="headerlink" title="Swift Package 的使用"></a>Swift Package 的使用</h2><p>我们再新建一个项目，名为 Demo，之后尝试添加之前的 Package。</p>
-<p><img src="https://image.qiweipeng.com/20201001104009.jpg"></p>
-<p>图 1 - 创建 Swift Package</p>
-<p>点击加号后，由于已经登陆了 Github，弹出的列表中可以找到之前创建的 Package，当然也可以复制 URL 进行搜索。找到后，会提示我们设置版本规则。其中，默认的 <code>Up to Next Major</code> 的意思是从指定的版本到下个大版本，这样进行小版本更新时，我们可以轻松对 Package 进行更新。再次点击下一步后，会提示选取 Product 以及添加到的 Target，我们都不加修改点击完成。这样，这个 Package 就集成到我们都项目中了。</p>
-<p>之后我们在项目中使用一下。</p>
-<figure class="highlight swift"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//</span></span><br><span class="line"><span class="comment">//  main.swift</span></span><br><span class="line"><span class="comment">//  Demo</span></span><br><span class="line"><span class="comment">//</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> Foundation</span><br><span class="line"><span class="keyword">import</span> Hello</span><br><span class="line"></span><br><span class="line"><span class="keyword">let</span> hello = <span class="type">Hello</span>()</span><br><span class="line"><span class="built_in">print</span>(hello.sayHi()) <span class="comment">// Hell, World!</span></span><br></pre></td></tr></table></figure>
-
-<p>至此，我们成功地在项目中集成并使用了一个 Swift Package。</p>
-<h2 id="修改-Package"><a href="#修改-Package" class="headerlink" title="修改 Package"></a>修改 Package</h2><p>我们这个 Package 是有问题的，输出的不是 <code>Hello</code> 而是 <code>Hell</code>。</p>
-<p>所以我们进一步可以去修改那个 Package，然后再次上传。对于新的版本需要打一个新的标签，由于只是 bug 修复，新版本就是 <code>1.0.1</code>。</p>
-<p>之后对于 Demo 项目，要做的只需要更新 Package 到最新版本，操作是 <code>File-&gt;Swift Packages-&gt;Update to Latest Package Versions</code>，之后这个 Package 就会更新到 <code>1.0.1</code> 版本，这个项目我们不修改任何代码重新运行，打印结果从 <code>Hell, World!</code> 修正为 <code>Hello, World!</code>。</p>
-<h2 id="参考文献"><a href="#参考文献" class="headerlink" title="参考文献"></a>参考文献</h2><ol>
-<li><a target="_blank" rel="noopener" href="https://developer.apple.com/videos/play/wwdc2019/408">Adopting Swift Packages in Xcode</a></li>
-<li><a target="_blank" rel="noopener" href="https://developer.apple.com/videos/play/wwdc2019/410">Creating Swift Packages</a></li>
-</ol>
-
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
 
   
   <nav class="pagination">
@@ -1462,7 +1457,7 @@
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">35</span>
+          <span class="site-state-item-count">36</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
