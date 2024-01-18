@@ -146,6 +146,115 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://qiweipeng.github.io/2020/12/03/data-structure-set/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="齐卫鹏">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="齐卫鹏的博客">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2020/12/03/data-structure-set/" class="post-title-link" itemprop="url">数据结构学习笔记 - 07 集合</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2020-12-03 22:10:29" itemprop="dateCreated datePublished" datetime="2020-12-03T22:10:29+08:00">2020-12-03</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2023-10-16 17:28:17" itemprop="dateModified" datetime="2023-10-16T17:28:17+08:00">2023-10-16</time>
+              </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <h2 id="介绍"><a href="#介绍" class="headerlink" title="介绍"></a>介绍</h2><p>对于集合来说，主要涉及增、查、删的操作，不涉及改的操作。</p>
+<p>集合的应用，比如词汇量统计，客户统计等。</p>
+<p>集合分为有序集合与无序集合；二分搜索树实现的集合，包括 Java 中的 TreeSet 使用红黑树实现，都是有序集合，因为这个集合中的元素是有序排列的。</p>
+<p>但是很多时候可能使用集合不会使用到集合的有序性，那么性能更好的无序集合就更适合。这里使用链表实现的集合虽然也是无序的，但是性能不好，但是如果使用哈希表实现，性能就很好了。</p>
+<h2 id="实现"><a href="#实现" class="headerlink" title="实现"></a>实现</h2><p>定义集合的接口：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">interface</span> <span class="title">Set</span>&lt;<span class="title">E</span>&gt; </span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * 添加元素 e</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="function"><span class="keyword">void</span> <span class="title">add</span><span class="params">(E e)</span></span>;</span><br><span class="line"></span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * 删除元素 e</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="function"><span class="keyword">void</span> <span class="title">remove</span><span class="params">(E e)</span></span>;</span><br><span class="line"></span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * 查看集合是否包含元素 e</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="function"><span class="keyword">boolean</span> <span class="title">contains</span><span class="params">(E e)</span></span>;</span><br><span class="line"></span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * 查看集合中元素的数量</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="function"><span class="keyword">int</span> <span class="title">getSize</span><span class="params">()</span></span>;</span><br><span class="line"></span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * 查看当前集合是否为空。</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="function"><span class="keyword">boolean</span> <span class="title">isEmpty</span><span class="params">()</span></span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>使用二分搜索树实现的集合：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">BSTSet</span>&lt;<span class="title">E</span> <span class="keyword">extends</span> <span class="title">Comparable</span>&lt;<span class="title">E</span>&gt;&gt; <span class="keyword">implements</span> <span class="title">Set</span>&lt;<span class="title">E</span>&gt; </span>&#123;</span><br><span class="line">    <span class="keyword">private</span> BST&lt;E&gt; bst;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="title">BSTSet</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        bst = <span class="keyword">new</span> BST&lt;&gt;();</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">int</span> <span class="title">getSize</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> bst.size();</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">boolean</span> <span class="title">isEmpty</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> bst.isEmpty();</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">add</span><span class="params">(E e)</span> </span>&#123;</span><br><span class="line">        bst.add(e);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">boolean</span> <span class="title">contains</span><span class="params">(E e)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> bst.contains(e);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">remove</span><span class="params">(E e)</span> </span>&#123;</span><br><span class="line">        bst.remove(e);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>使用链表实现的集合：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">LinkedListSet</span>&lt;<span class="title">E</span>&gt; <span class="keyword">implements</span> <span class="title">Set</span>&lt;<span class="title">E</span>&gt; </span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">private</span> LinkedList&lt;E&gt; linkedList;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="title">LinkedListSet</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        linkedList = <span class="keyword">new</span> LinkedList&lt;&gt;();</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">int</span> <span class="title">getSize</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> linkedList.getSize();</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">boolean</span> <span class="title">isEmpty</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> linkedList.isEmpty();</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">boolean</span> <span class="title">contains</span><span class="params">(E e)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> linkedList.contains(e);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">add</span><span class="params">(E e)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">if</span> (!linkedList.contains(e)) &#123;</span><br><span class="line">            linkedList.addFirst(e);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">remove</span><span class="params">(E e)</span> </span>&#123;</span><br><span class="line">        linkedList.removeElements(e);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h2 id="分析"><a href="#分析" class="headerlink" title="分析"></a>分析</h2><table>
+<thead>
+<tr>
+<th></th>
+<th>链表集合</th>
+<th>二分搜索树集合（平均）</th>
+<th>二分搜索树集合（最差）</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>增 add</td>
+<td>O(n)</td>
+<td>O(logn)</td>
+<td>O(n)</td>
+</tr>
+<tr>
+<td>查 contains</td>
+<td>O(n)</td>
+<td>O(logn)</td>
+<td>O(n)</td>
+</tr>
+<tr>
+<td>删 remove</td>
+<td>O(n)</td>
+<td>O(logn)</td>
+<td>O(n)</td>
+</tr>
+</tbody></table>
+<p>对于链表集合来说，本身在链表头增加一个元素或者删除一个元素，都是 O(1) 级别的。但是为了查重，都需要遍历查询一边，链表的查询是 O(n) 级别的，所以最终增删也是 O(n) 级别的。</p>
+<p>对于二分搜索树集合，它的增查删其实只是寻找了树的层树，我们用 h 表示。最好的情况，也就是树是满的情况下层数和元素数的关系是 2^h - 1 = n，h = log(n + 1)    (log底是 2)。那么最好情况的复杂度就是 O(logn) 级别的，这其实很接近 O(1) 级别，在数据量大的时候要比 O(n) 好得多。但是对于二分搜索树来说，如果添加元素的时候恰好是从小到大或者相反地插入元素，这棵树就退化成链表了。要解决这个问题，就要使用平衡二叉树。</p>
+<p>二分搜索树集合属于有序集合，有序集合都是基于搜索树实现的。如果我们需要使用集合的有序性这一特点，就要考虑使用搜索树来实现。比如有序集合更适合得到集合中的最大元素，最小元素等。</p>
+<p>链表集合属于无序集合。无序集合也可以使用哈希表来实现，哈希表实现的集合性能比搜索树实现的更好。</p>
+
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
     <link itemprop="mainEntityOfPage" href="https://qiweipeng.github.io/2020/11/09/data-structure-bst/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -1185,97 +1294,6 @@
   
   
 
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="https://qiweipeng.github.io/2020/06/22/objc-style-guide/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.gif">
-      <meta itemprop="name" content="齐卫鹏">
-      <meta itemprop="description" content="">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="齐卫鹏的博客">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2020/06/22/objc-style-guide/" class="post-title-link" itemprop="url">Objective-C 代码规范</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">发表于</span>
-
-              <time title="创建时间：2020-06-22 21:52:54" itemprop="dateCreated datePublished" datetime="2020-06-22T21:52:54+08:00">2020-06-22</time>
-            </span>
-              <span class="post-meta-item">
-                <span class="post-meta-item-icon">
-                  <i class="far fa-calendar-check"></i>
-                </span>
-                <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2023-10-16 17:28:17" itemprop="dateModified" datetime="2023-10-16T17:28:17+08:00">2023-10-16</time>
-              </span>
-
-          
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <p>本文记录一下自己在写 ObjC 代码时遵守的规范，只记录大概，以供查询。</p>
-<h2 id="书写顺序"><a href="#书写顺序" class="headerlink" title="书写顺序"></a>书写顺序</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">.h</span><br><span class="line">版权</span><br><span class="line">头文件引入（系统&#x2F;第三方&#x2F;项目）</span><br><span class="line">NS_ASSUME_NONNULL_BEGIN</span><br><span class="line">@class</span><br><span class="line">宏定义</span><br><span class="line">常量定义</span><br><span class="line">Block 类型定义</span><br><span class="line">枚举</span><br><span class="line">函数声明</span><br><span class="line">协议定义</span><br><span class="line">类定义 @interface</span><br><span class="line">NS_ASSUME_NONNULL_END</span><br></pre></td></tr></table></figure>
-
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">.m</span><br><span class="line">版权</span><br><span class="line">头文件引入（系统&#x2F;第三方&#x2F;项目）</span><br><span class="line">宏定义</span><br><span class="line">常量定义</span><br><span class="line">Block 类型定义</span><br><span class="line">枚举</span><br><span class="line">函数</span><br><span class="line">@interface</span><br><span class="line">@implementation</span><br></pre></td></tr></table></figure>
-
-<p>属性关键字顺序：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">(nullable, nonatomic, readwrite, getter&#x3D;method, strong)</span><br></pre></td></tr></table></figure>
-
-<h2 id="规范写法"><a href="#规范写法" class="headerlink" title="规范写法"></a>规范写法</h2><h3 id="常量"><a href="#常量" class="headerlink" title="常量"></a>常量</h3><p>下面是钟颖的代码中定义的静态常量</p>
-<figure class="highlight objc"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">static</span> <span class="keyword">const</span> <span class="built_in">CGFloat</span> kTabBarHeight      = <span class="number">44.0</span>;</span><br><span class="line"><span class="keyword">static</span> <span class="keyword">const</span> <span class="built_in">CGFloat</span> kStatusBarHeight   = <span class="number">20.0</span>;</span><br><span class="line"><span class="keyword">static</span> <span class="keyword">const</span> <span class="built_in">CGFloat</span> kTableContentInset = <span class="number">200</span>;</span><br></pre></td></tr></table></figure>
-
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">&#x2F;&#x2F; .h</span><br><span class="line">&#x2F;&#x2F; 字符串常量声明</span><br><span class="line">extern NSString * const &lt;stringName&gt;;</span><br><span class="line"></span><br><span class="line">&#x2F;&#x2F; .m</span><br><span class="line">&#x2F;&#x2F; 静态字符串常量</span><br><span class="line">static NSString * const &lt;stringName&gt; &#x3D; @&quot;&lt;stringName&gt;&quot;;</span><br><span class="line">&#x2F;&#x2F; 静态常量</span><br><span class="line">static const &lt;Type&gt; &lt;constantName&gt; &#x3D; &lt;value&gt;;</span><br><span class="line"></span><br><span class="line">&#x2F;&#x2F; 字符串常量</span><br><span class="line">NSString * const &lt;stringName&gt; &#x3D; @&quot;&lt;stringName&gt;&quot;;</span><br></pre></td></tr></table></figure>
-
-<h3 id="通知"><a href="#通知" class="headerlink" title="通知"></a>通知</h3><p>下面是 AFNetworking 中通知的写法。</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">&#x2F;&#x2F; .h</span><br><span class="line">FOUNDATION_EXPORT NSString * const AFNetworkingTaskDidCompleteNotification;</span><br><span class="line">&#x2F;&#x2F; .m</span><br><span class="line">NSString * const AFNetworkingTaskDidCompleteNotification &#x3D; @&quot;com.alamofire.networking.task.complete&quot;;</span><br></pre></td></tr></table></figure>
-
-<h2 id="前缀"><a href="#前缀" class="headerlink" title="前缀"></a>前缀</h2><p>前缀需要使用三个字母，如 <code>QWP</code>。</p>
-<h3 id="类名"><a href="#类名" class="headerlink" title="类名"></a>类名</h3><p>类名需要添加类前缀。</p>
-<h3 id="分类方法"><a href="#分类方法" class="headerlink" title="分类方法"></a>分类方法</h3><p>特别是给系统框架的类增加 Category 的时候，定义的方法需要加小写的类前缀，如 <code>- (NSURL *)sd_currentImageURL;</code>，原因是如果分类方法不小心和类中原有方法或者和其他分类方法同名了，有可能就会覆盖。同一个类的不同分类也可以通过前缀避免方法重名。</p>
-<h3 id="Protocol-的名字"><a href="#Protocol-的名字" class="headerlink" title="Protocol 的名字"></a>Protocol 的名字</h3><p>制定代理协议的时候，协议名需要加上制定者的类前缀；但是协议方法是不需要加类前缀的。</p>
-<h2 id="References"><a href="#References" class="headerlink" title="References"></a>References</h2><ol>
-<li><a target="_blank" rel="noopener" href="https://developer.apple.com/library/archive/documentation/Cocoa/Conceptual/CodingGuidelines/CodingGuidelines.html">Coding Guidelines for Cocoa</a></li>
-<li><a target="_blank" rel="noopener" href="https://github.com/github/objective-c-style-guide">GitHub Objective-C Style Guide</a></li>
-<li><a target="_blank" rel="noopener" href="https://github.com/google/styleguide/blob/gh-pages/objcguide.md">Google Objective-C Style Guide</a></li>
-<li><a target="_blank" rel="noopener" href="https://github.com/NYTimes/objective-c-style-guide">NYTimes Objective-C Style Guide</a></li>
-<li><a target="_blank" rel="noopener" href="https://github.com/raywenderlich/objective-c-style-guide#language">The official raywenderlich.com Objective-C style guide</a></li>
-</ol>
-
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
 
   
   <nav class="pagination">
@@ -1345,7 +1363,7 @@
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">42</span>
+          <span class="site-state-item-count">43</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
@@ -1377,7 +1395,7 @@
 <div class="copyright">
   
   &copy; 
-  <span itemprop="copyrightYear">2023</span>
+  <span itemprop="copyrightYear">2024</span>
   <span class="with-love">
     <i class="fa fa-heart"></i>
   </span>

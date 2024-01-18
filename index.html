@@ -146,6 +146,91 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://qiweipeng.github.io/2024/01/18/publish-npm-package/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="齐卫鹏">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="齐卫鹏的博客">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2024/01/18/publish-npm-package/" class="post-title-link" itemprop="url">如何发布 npm 包</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+              
+
+              <time title="创建时间：2024-01-18 16:40:45 / 修改时间：18:24:47" itemprop="dateCreated datePublished" datetime="2024-01-18T16:40:45+08:00">2024-01-18</time>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <blockquote>
+<p>这里简单记录一下 <code>npm</code> 包的创建和发布流程。</p>
+</blockquote>
+<h2 id="创建"><a href="#创建" class="headerlink" title="创建"></a>创建</h2><p>在项目中通过 <code>npm init</code> 可创建 package.json 文件，之后填写内容大致如下：</p>
+<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br></pre></td><td class="code"><pre><span class="line">&#123;</span><br><span class="line">  <span class="attr">&quot;name&quot;</span>: <span class="string">&quot;@qiweipeng/use-axios&quot;</span>,</span><br><span class="line">  <span class="attr">&quot;version&quot;</span>: <span class="string">&quot;1.0.0&quot;</span>,</span><br><span class="line">  <span class="attr">&quot;description&quot;</span>: <span class="string">&quot;An axios hook.&quot;</span>,</span><br><span class="line">  <span class="attr">&quot;main&quot;</span>: <span class="string">&quot;./lib/index.js&quot;</span>,</span><br><span class="line">  <span class="attr">&quot;types&quot;</span>: <span class="string">&quot;./lib/index.d.ts&quot;</span>,</span><br><span class="line">  <span class="attr">&quot;files&quot;</span>: [</span><br><span class="line">    <span class="string">&quot;/lib&quot;</span></span><br><span class="line">  ],</span><br><span class="line">  <span class="attr">&quot;scripts&quot;</span>: &#123;</span><br><span class="line">    <span class="attr">&quot;build&quot;</span>: <span class="string">&quot;rm -rf ./lib &amp;&amp; tsc&quot;</span>,</span><br><span class="line">    <span class="attr">&quot;test&quot;</span>: <span class="string">&quot;echo \&quot;Error: no test specified\&quot; &amp;&amp; exit 1&quot;</span></span><br><span class="line">  &#125;,</span><br><span class="line">  <span class="attr">&quot;repository&quot;</span>: &#123;</span><br><span class="line">    <span class="attr">&quot;type&quot;</span>: <span class="string">&quot;git&quot;</span>,</span><br><span class="line">    <span class="attr">&quot;url&quot;</span>: <span class="string">&quot;git+https://github.com/qiweipeng/useAxios.git&quot;</span></span><br><span class="line">  &#125;,</span><br><span class="line">  <span class="attr">&quot;keywords&quot;</span>: [</span><br><span class="line">    <span class="string">&quot;axios&quot;</span>,</span><br><span class="line">    <span class="string">&quot;zod&quot;</span></span><br><span class="line">  ],</span><br><span class="line">  <span class="attr">&quot;author&quot;</span>: <span class="string">&quot;Weipeng Qi &lt;qiweipeng@hotmail.com&gt;&quot;</span>,</span><br><span class="line">  <span class="attr">&quot;license&quot;</span>: <span class="string">&quot;MIT&quot;</span>,</span><br><span class="line">  <span class="attr">&quot;bugs&quot;</span>: &#123;</span><br><span class="line">    <span class="attr">&quot;url&quot;</span>: <span class="string">&quot;https://github.com/qiweipeng/useAxios/issues&quot;</span></span><br><span class="line">  &#125;,</span><br><span class="line">  <span class="attr">&quot;homepage&quot;</span>: <span class="string">&quot;https://github.com/qiweipeng/useAxios#readme&quot;</span>,</span><br><span class="line">  <span class="attr">&quot;dependencies&quot;</span>: &#123;</span><br><span class="line">    <span class="attr">&quot;@anatine/zod-mock&quot;</span>: <span class="string">&quot;^3.12.0&quot;</span>,</span><br><span class="line">    <span class="attr">&quot;@faker-js/faker&quot;</span>: <span class="string">&quot;^8.0.0&quot;</span>,</span><br><span class="line">    <span class="attr">&quot;axios&quot;</span>: <span class="string">&quot;^1.3.0&quot;</span>,</span><br><span class="line">    <span class="attr">&quot;zod&quot;</span>: <span class="string">&quot;^3.21.0&quot;</span></span><br><span class="line">  &#125;,</span><br><span class="line">  <span class="attr">&quot;devDependencies&quot;</span>: &#123;</span><br><span class="line">    <span class="attr">&quot;@types/react&quot;</span>: <span class="string">&quot;^18.0.0&quot;</span>,</span><br><span class="line">    <span class="attr">&quot;typescript&quot;</span>: <span class="string">&quot;^4.4.2&quot;</span></span><br><span class="line">  &#125;,</span><br><span class="line">  <span class="attr">&quot;peerDependencies&quot;</span>: &#123;</span><br><span class="line">    <span class="attr">&quot;react&quot;</span>: <span class="string">&quot;^18.0.0&quot;</span></span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>同时，在项目根目录创建 <code>index.ts</code> 文件，该文件作为入口文件，暴露项目中需要公开的文件。如：</p>
+<figure class="highlight typescript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// index.ts</span></span><br><span class="line"><span class="keyword">export</span> &#123;<span class="keyword">default</span> <span class="keyword">as</span> axios&#125; <span class="keyword">from</span> <span class="string">&#x27;./src/axios&#x27;</span></span><br><span class="line"><span class="keyword">export</span> * <span class="keyword">from</span> <span class="string">&#x27;./src/useAxios&#x27;</span></span><br><span class="line"><span class="keyword">export</span> * <span class="keyword">from</span> <span class="string">&#x27;./src/useValidatedAxios&#x27;</span></span><br><span class="line"><span class="keyword">export</span> &#123;<span class="keyword">default</span> <span class="keyword">as</span> useUpdateRef&#125; <span class="keyword">from</span> <span class="string">&#x27;./src/utils/useUpdateRef&#x27;</span></span><br></pre></td></tr></table></figure>
+
+<p>下面解释一下 <code>package.json</code> 中的部分字段的设置：</p>
+<ul>
+<li><code>name</code>：包名，其中 <code>qiweipeng</code> 是 <a target="_blank" rel="noopener" href="https://www.npmjs.com/">npm</a> 网站中的用户名，如此设置后，安装的命令就是如 <code>yarn add @qiweipeng/use-axios</code>；</li>
+<li><code>version</code>：版本号，这个每次发版更新即可；</li>
+<li><code>main</code> 和 <code>types</code>：分别代表了编译之后 <code>JavaScript</code> 和 <code>TypeScript</code> 的入口文件，由于编译之后的目录是 <code>./lib</code> 文件夹，而我们预先设置的入口文件是在根目录，所以设置的路径分别是 <code>./lib/index.js</code> 和 <code>./lib/index.d.ts</code>；</li>
+<li><code>files</code>：表示发布的代码的目录，这里需要设置为编译后的目录，即 <code>/lib</code>；</li>
+<li><code>scripts</code>-<code>build</code>：编译命令，代码完成后需要执行该命令编译代码；</li>
+<li><code>dependencies</code>：发布的包的依赖；</li>
+</ul>
+<p>另外，需要注意在 <code>tsconfig.json</code> 文件中，加入如下两个字段：</p>
+<figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">&quot;outDir&quot;: &quot;./lib&quot;,</span><br><span class="line">&quot;rootDir&quot;: &quot;./&quot;,</span><br></pre></td></tr></table></figure>
+
+<p>因为 <code>./lib</code> 文件夹没必要提交到 <code>Git</code>，所以最好在 <code>.gitignore</code> 中加入 <code>lib</code> 进行忽略。</p>
+<h2 id="发布"><a href="#发布" class="headerlink" title="发布"></a>发布</h2><p>代码完成后执行 <code>npm build</code> 编译代码，之后使用 <code>npm login</code> 可以登录账号，登录完成后使用 <code>npm publish --access public</code> 即可发布。</p>
+<p>另外，如果代码仓库是私有库，又或者我们发布的仓库不是 <code>npm</code> 官方的仓库而是自建库，那么可以在根目录创建 <code>.npmrc</code> 文件来进行设置：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">registry&#x3D;&quot;http:&#x2F;&#x2F;xxx.xxx&#x2F;&quot;</span><br><span class="line">&#x2F;&#x2F;xxx.xxx&#x2F;:_authToken&#x3D;abbe5034-c886-26b6-a324-2f3c701de522</span><br></pre></td></tr></table></figure>
+
+<p>其中第一行代表了包发布的地址，第二行的含义是给某个地址设置 <code>_authToken</code>，即一次性密码，设置后即使本地没有登录，也可以读取该密码进行登录来发包。</p>
+
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
     <link itemprop="mainEntityOfPage" href="https://qiweipeng.github.io/2023/11/20/kindle-font-recommend/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -1042,115 +1127,6 @@
   
   
 
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="https://qiweipeng.github.io/2020/12/03/data-structure-set/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.gif">
-      <meta itemprop="name" content="齐卫鹏">
-      <meta itemprop="description" content="">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="齐卫鹏的博客">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2020/12/03/data-structure-set/" class="post-title-link" itemprop="url">数据结构学习笔记 - 07 集合</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">发表于</span>
-
-              <time title="创建时间：2020-12-03 22:10:29" itemprop="dateCreated datePublished" datetime="2020-12-03T22:10:29+08:00">2020-12-03</time>
-            </span>
-              <span class="post-meta-item">
-                <span class="post-meta-item-icon">
-                  <i class="far fa-calendar-check"></i>
-                </span>
-                <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2023-10-16 17:28:17" itemprop="dateModified" datetime="2023-10-16T17:28:17+08:00">2023-10-16</time>
-              </span>
-
-          
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <h2 id="介绍"><a href="#介绍" class="headerlink" title="介绍"></a>介绍</h2><p>对于集合来说，主要涉及增、查、删的操作，不涉及改的操作。</p>
-<p>集合的应用，比如词汇量统计，客户统计等。</p>
-<p>集合分为有序集合与无序集合；二分搜索树实现的集合，包括 Java 中的 TreeSet 使用红黑树实现，都是有序集合，因为这个集合中的元素是有序排列的。</p>
-<p>但是很多时候可能使用集合不会使用到集合的有序性，那么性能更好的无序集合就更适合。这里使用链表实现的集合虽然也是无序的，但是性能不好，但是如果使用哈希表实现，性能就很好了。</p>
-<h2 id="实现"><a href="#实现" class="headerlink" title="实现"></a>实现</h2><p>定义集合的接口：</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">interface</span> <span class="title">Set</span>&lt;<span class="title">E</span>&gt; </span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * 添加元素 e</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="function"><span class="keyword">void</span> <span class="title">add</span><span class="params">(E e)</span></span>;</span><br><span class="line"></span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * 删除元素 e</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="function"><span class="keyword">void</span> <span class="title">remove</span><span class="params">(E e)</span></span>;</span><br><span class="line"></span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * 查看集合是否包含元素 e</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="function"><span class="keyword">boolean</span> <span class="title">contains</span><span class="params">(E e)</span></span>;</span><br><span class="line"></span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * 查看集合中元素的数量</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="function"><span class="keyword">int</span> <span class="title">getSize</span><span class="params">()</span></span>;</span><br><span class="line"></span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * 查看当前集合是否为空。</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="function"><span class="keyword">boolean</span> <span class="title">isEmpty</span><span class="params">()</span></span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p>使用二分搜索树实现的集合：</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">BSTSet</span>&lt;<span class="title">E</span> <span class="keyword">extends</span> <span class="title">Comparable</span>&lt;<span class="title">E</span>&gt;&gt; <span class="keyword">implements</span> <span class="title">Set</span>&lt;<span class="title">E</span>&gt; </span>&#123;</span><br><span class="line">    <span class="keyword">private</span> BST&lt;E&gt; bst;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="title">BSTSet</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        bst = <span class="keyword">new</span> BST&lt;&gt;();</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">int</span> <span class="title">getSize</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> bst.size();</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">boolean</span> <span class="title">isEmpty</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> bst.isEmpty();</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">add</span><span class="params">(E e)</span> </span>&#123;</span><br><span class="line">        bst.add(e);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">boolean</span> <span class="title">contains</span><span class="params">(E e)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> bst.contains(e);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">remove</span><span class="params">(E e)</span> </span>&#123;</span><br><span class="line">        bst.remove(e);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p>使用链表实现的集合：</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">LinkedListSet</span>&lt;<span class="title">E</span>&gt; <span class="keyword">implements</span> <span class="title">Set</span>&lt;<span class="title">E</span>&gt; </span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">private</span> LinkedList&lt;E&gt; linkedList;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="title">LinkedListSet</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        linkedList = <span class="keyword">new</span> LinkedList&lt;&gt;();</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">int</span> <span class="title">getSize</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> linkedList.getSize();</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">boolean</span> <span class="title">isEmpty</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> linkedList.isEmpty();</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">boolean</span> <span class="title">contains</span><span class="params">(E e)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> linkedList.contains(e);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">add</span><span class="params">(E e)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">if</span> (!linkedList.contains(e)) &#123;</span><br><span class="line">            linkedList.addFirst(e);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">remove</span><span class="params">(E e)</span> </span>&#123;</span><br><span class="line">        linkedList.removeElements(e);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<h2 id="分析"><a href="#分析" class="headerlink" title="分析"></a>分析</h2><table>
-<thead>
-<tr>
-<th></th>
-<th>链表集合</th>
-<th>二分搜索树集合（平均）</th>
-<th>二分搜索树集合（最差）</th>
-</tr>
-</thead>
-<tbody><tr>
-<td>增 add</td>
-<td>O(n)</td>
-<td>O(logn)</td>
-<td>O(n)</td>
-</tr>
-<tr>
-<td>查 contains</td>
-<td>O(n)</td>
-<td>O(logn)</td>
-<td>O(n)</td>
-</tr>
-<tr>
-<td>删 remove</td>
-<td>O(n)</td>
-<td>O(logn)</td>
-<td>O(n)</td>
-</tr>
-</tbody></table>
-<p>对于链表集合来说，本身在链表头增加一个元素或者删除一个元素，都是 O(1) 级别的。但是为了查重，都需要遍历查询一边，链表的查询是 O(n) 级别的，所以最终增删也是 O(n) 级别的。</p>
-<p>对于二分搜索树集合，它的增查删其实只是寻找了树的层树，我们用 h 表示。最好的情况，也就是树是满的情况下层数和元素数的关系是 2^h - 1 = n，h = log(n + 1)    (log底是 2)。那么最好情况的复杂度就是 O(logn) 级别的，这其实很接近 O(1) 级别，在数据量大的时候要比 O(n) 好得多。但是对于二分搜索树来说，如果添加元素的时候恰好是从小到大或者相反地插入元素，这棵树就退化成链表了。要解决这个问题，就要使用平衡二叉树。</p>
-<p>二分搜索树集合属于有序集合，有序集合都是基于搜索树实现的。如果我们需要使用集合的有序性这一特点，就要考虑使用搜索树来实现。比如有序集合更适合得到集合中的最大元素，最小元素等。</p>
-<p>链表集合属于无序集合。无序集合也可以使用哈希表来实现，哈希表实现的集合性能比搜索树实现的更好。</p>
-
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
 
   
   <nav class="pagination">
@@ -1220,7 +1196,7 @@
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">42</span>
+          <span class="site-state-item-count">43</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
@@ -1252,7 +1228,7 @@
 <div class="copyright">
   
   &copy; 
-  <span itemprop="copyrightYear">2023</span>
+  <span itemprop="copyrightYear">2024</span>
   <span class="with-love">
     <i class="fa fa-heart"></i>
   </span>
