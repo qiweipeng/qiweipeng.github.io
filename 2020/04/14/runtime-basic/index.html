@@ -1,0 +1,421 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 7.3.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"qiweipeng.github.io","root":"/","scheme":"Muse","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
+  </script>
+
+  <meta name="description" content="本系列笔记参考 Runtime 源码为 objc4-779.1。 什么是 RuntimeRuntime 是一套使用 C、C++、汇编实现的 API，调用 ObjC 方法时，实际上是执行的 Runtime 接口，最终执行的其实是 C&#x2F;C++ 代码。 Runtime 可以理解为构成 ObjC 语言的一部分。ObjC 为 C 语言加上的面向对象的特性，通过 Clang 编译器和 Runtime">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Objective-C Runtime 之一 基础介绍">
+<meta property="og:url" content="https://qiweipeng.github.io/2020/04/14/runtime-basic/index.html">
+<meta property="og:site_name" content="齐卫鹏的博客">
+<meta property="og:description" content="本系列笔记参考 Runtime 源码为 objc4-779.1。 什么是 RuntimeRuntime 是一套使用 C、C++、汇编实现的 API，调用 ObjC 方法时，实际上是执行的 Runtime 接口，最终执行的其实是 C&#x2F;C++ 代码。 Runtime 可以理解为构成 ObjC 语言的一部分。ObjC 为 C 语言加上的面向对象的特性，通过 Clang 编译器和 Runtime">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2020-04-14T11:30:54.000Z">
+<meta property="article:modified_time" content="2024-11-26T07:58:51.056Z">
+<meta property="article:author" content="齐卫鹏">
+<meta property="article:tag" content="Objective-C">
+<meta name="twitter:card" content="summary">
+
+<link rel="canonical" href="https://qiweipeng.github.io/2020/04/14/runtime-basic/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'zh-CN'
+  };
+</script>
+
+  <title>Objective-C Runtime 之一 基础介绍 | 齐卫鹏的博客</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">齐卫鹏的博客</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+      <p class="site-subtitle" itemprop="description">欢迎</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a>
+
+  </li>
+  </ul>
+</nav>
+
+
+
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://qiweipeng.github.io/2020/04/14/runtime-basic/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="齐卫鹏">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="齐卫鹏的博客">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          Objective-C Runtime 之一 基础介绍
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2020-04-14 19:30:54" itemprop="dateCreated datePublished" datetime="2020-04-14T19:30:54+08:00">2020-04-14</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2024-11-26 15:58:51" itemprop="dateModified" datetime="2024-11-26T15:58:51+08:00">2024-11-26</time>
+              </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <p>本系列笔记参考 <code>Runtime</code> 源码为 <code>objc4-779.1</code>。</p>
+<h2 id="什么是-Runtime"><a href="#什么是-Runtime" class="headerlink" title="什么是 Runtime"></a>什么是 Runtime</h2><p><code>Runtime</code> 是一套使用 C、C++、汇编实现的 API，调用 ObjC 方法时，实际上是执行的 <code>Runtime</code> 接口，最终执行的其实是 C&#x2F;C++ 代码。</p>
+<p><code>Runtime</code> 可以理解为构成 ObjC 语言的一部分。ObjC 为 C 语言加上的面向对象的特性，通过 Clang 编译器和 <code>Runtime</code> 实现。</p>
+<h2 id="编译-ObjC-文件"><a href="#编译-ObjC-文件" class="headerlink" title="编译 ObjC 文件"></a>编译 ObjC 文件</h2><p>使用 <code>clang -rewrite-objc Hello.m</code> 命令。</p>
+<h2 id="使用-Runtime"><a href="#使用-Runtime" class="headerlink" title="使用 Runtime"></a>使用 Runtime</h2><h3 id="ObjC-方法调用"><a href="#ObjC-方法调用" class="headerlink" title="ObjC 方法调用"></a>ObjC 方法调用</h3><p>ObjC 方法调用本质上就是在调用 <code>Runtime</code> 的 API，比如使用 ObjC 编写如下代码：</p>
+<figure class="highlight objc"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">Person *olivia = [[Person alloc] init];</span><br><span class="line">[olivia sayHi];</span><br></pre></td></tr></table></figure>
+
+<p>使用命令 <code>clang -rewrite-objc main.m</code> 编译成 C++ 代码后如下：</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">Person *olivia = ((Person *(*)(id, SEL))(<span class="type">void</span> *)objc_msgSend)((id)((Person *(*)(id, SEL))(<span class="type">void</span> *)objc_msgSend)((id)<span class="built_in">objc_getClass</span>(<span class="string">&quot;Person&quot;</span>), <span class="built_in">sel_registerName</span>(<span class="string">&quot;alloc&quot;</span>)), <span class="built_in">sel_registerName</span>(<span class="string">&quot;init&quot;</span>));</span><br><span class="line">((<span class="built_in">void</span> (*)(id, SEL))(<span class="type">void</span> *)objc_msgSend)((id)olivia, <span class="built_in">sel_registerName</span>(<span class="string">&quot;sayHi&quot;</span>));</span><br></pre></td></tr></table></figure>
+
+<p>可以看到，ObjC 中调用方法本质上是在调用 <code>objc_msgSend</code> 函数：</p>
+<figure class="highlight objc"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// message.h</span></span><br><span class="line"></span><br><span class="line">OBJC_EXPORT <span class="type">id</span> _Nullable</span><br><span class="line">objc_msgSend(<span class="type">id</span> _Nullable <span class="keyword">self</span>, SEL _Nonnull op, ...)</span><br><span class="line">    OBJC_AVAILABLE(<span class="number">10.0</span>, <span class="number">2.0</span>, <span class="number">9.0</span>, <span class="number">1.0</span>, <span class="number">2.0</span>);</span><br></pre></td></tr></table></figure>
+
+<p>这个函数第一个参数就是方法的调用者（<code>receiver</code>），第二个参数是 <code>SEL</code> 类型，上面代码中使用 <code>sel_registerName(&quot;方法名&quot;)</code> 获得，如果方法含有参数，那么就是 <code>objc_msgSend</code> 中第三个以及之后的参数。其中 <code>SEL</code> 就是 <code>方法选择器（selector）</code>，我们常常使用 <code>@selector()</code> 获得，它实际上是一个结构体指针。</p>
+<figure class="highlight objc"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// objc.h</span></span><br><span class="line"></span><br><span class="line"><span class="comment">/// An opaque type that represents a method selector.</span></span><br><span class="line"><span class="keyword">typedef</span> <span class="keyword">struct</span> objc_selector *SEL;</span><br></pre></td></tr></table></figure>
+
+<p>而 <code>sel_registerName</code> 就是通过方法名这个字符串去获得 <code>SEL</code>：</p>
+<figure class="highlight objc"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">OBJC_EXPORT SEL _Nonnull</span><br><span class="line">sel_registerName(<span class="keyword">const</span> <span class="type">char</span> * _Nonnull str)</span><br><span class="line">    OBJC_AVAILABLE(<span class="number">10.0</span>, <span class="number">2.0</span>, <span class="number">9.0</span>, <span class="number">1.0</span>, <span class="number">2.0</span>);</span><br></pre></td></tr></table></figure>
+
+<p>需要注意的是，这里说的方法名包含参数个数信息，不包含参数类型和返回值类型信息，也就是说，我们可以从一个 <code>SEL</code> 中得到这个方法的名字以及有几个参数（如 <code>sayHi:</code> 表示这个方法具有一个参数），但是无法知道这个方法的返回值类型和参数类型。所以 ObjC 中如果函数名相同且参数个数相同，即使返回值类型和参数类型都不同，编译器也是会报错的。</p>
+<h3 id="NSObject-方法"><a href="#NSObject-方法" class="headerlink" title="NSObject 方法"></a>NSObject 方法</h3><p>NSObject 中的方法大多都是调用的 <code>Runtime</code> 的 API：</p>
+<figure class="highlight objc"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">- (<span class="type">id</span>)performSelector:(SEL)aSelector;</span><br><span class="line">- (<span class="type">id</span>)performSelector:(SEL)aSelector withObject:(<span class="type">id</span>)object;</span><br><span class="line">- (<span class="type">id</span>)performSelector:(SEL)aSelector withObject:(<span class="type">id</span>)object1 withObject:(<span class="type">id</span>)object2;</span><br><span class="line"></span><br><span class="line">- (<span class="type">BOOL</span>)isProxy;</span><br><span class="line"></span><br><span class="line">- (<span class="type">BOOL</span>)isKindOfClass:(Class)aClass;</span><br><span class="line">- (<span class="type">BOOL</span>)isMemberOfClass:(Class)aClass;</span><br><span class="line">- (<span class="type">BOOL</span>)conformsToProtocol:(Protocol *)aProtocol;</span><br><span class="line"></span><br><span class="line">- (<span class="type">BOOL</span>)respondsToSelector:(SEL)aSelector;</span><br></pre></td></tr></table></figure>
+
+<h3 id="直接调用-Runtime-库函数"><a href="#直接调用-Runtime-库函数" class="headerlink" title="直接调用 Runtime 库函数"></a>直接调用 Runtime 库函数</h3><figure class="highlight objc"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#import <span class="string">&lt;objc/runtime.h&gt;</span></span></span><br><span class="line"><span class="meta">#import <span class="string">&lt;objc/message.h&gt;</span></span></span><br></pre></td></tr></table></figure>
+
+<p>可以通过引入 <code>Runtime</code> 头文件，直接调用 <code>Runtime</code> 中的 API，基于 <code>Runtime</code> 的很多实现也是通过调用 <code>Runtime</code> API 完成的。</p>
+<h2 id="参考文献"><a href="#参考文献" class="headerlink" title="参考文献"></a>参考文献</h2><ol>
+<li><a target="_blank" rel="noopener" href="https://developer.apple.com/library/archive/documentation/Cocoa/Conceptual/ObjCRuntimeGuide/Introduction/Introduction.html#//apple_ref/doc/uid/TP40008048-CH1-SW1">Objective-C Runtime Programming Guide</a></li>
+<li><a target="_blank" rel="noopener" href="http://yulingtianxia.com/blog/2014/11/05/objective-c-runtime/#SEL">Objective-C Runtime - 玉令天下的博客</a></li>
+<li><a target="_blank" rel="noopener" href="http://yulingtianxia.com/blog/2016/06/15/Objective-C-Message-Sending-and-Forwarding/">Objective-C 消息发送与转发机制原理 - 玉令天下的博客</a></li>
+<li><a target="_blank" rel="noopener" href="http://yulingtianxia.com/blog/2015/12/06/The-Principle-of-Refenrence-Counting/#isa-%E6%8C%87%E9%92%88%EF%BC%88NONPOINTER-ISA%EF%BC%89">Objective-C 引用计数原理 - 玉令天下的博客</a></li>
+</ol>
+
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/Objective-C/" rel="tag"># Objective-C</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2020/03/24/swift-package-usage/" rel="prev" title="Swift Package 的创建和使用">
+      <i class="fa fa-chevron-left"></i> Swift Package 的创建和使用
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/2020/04/14/runtime-class-and-object/" rel="next" title="Objective-C Runtime 之二 理解类和对象">
+      Objective-C Runtime 之二 理解类和对象 <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%BB%80%E4%B9%88%E6%98%AF-Runtime"><span class="nav-number">1.</span> <span class="nav-text">什么是 Runtime</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%BC%96%E8%AF%91-ObjC-%E6%96%87%E4%BB%B6"><span class="nav-number">2.</span> <span class="nav-text">编译 ObjC 文件</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%BD%BF%E7%94%A8-Runtime"><span class="nav-number">3.</span> <span class="nav-text">使用 Runtime</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#ObjC-%E6%96%B9%E6%B3%95%E8%B0%83%E7%94%A8"><span class="nav-number">3.1.</span> <span class="nav-text">ObjC 方法调用</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#NSObject-%E6%96%B9%E6%B3%95"><span class="nav-number">3.2.</span> <span class="nav-text">NSObject 方法</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%9B%B4%E6%8E%A5%E8%B0%83%E7%94%A8-Runtime-%E5%BA%93%E5%87%BD%E6%95%B0"><span class="nav-number">3.3.</span> <span class="nav-text">直接调用 Runtime 库函数</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%8F%82%E8%80%83%E6%96%87%E7%8C%AE"><span class="nav-number">4.</span> <span class="nav-text">参考文献</span></a></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <p class="site-author-name" itemprop="name">齐卫鹏</p>
+  <div class="site-description" itemprop="description"></div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">44</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-tags">
+        <span class="site-state-item-count">13</span>
+        <span class="site-state-item-name">标签</span>
+      </div>
+  </nav>
+</div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2024</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">齐卫鹏</span>
+</div>
+  <div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://muse.theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Muse</a> 强力驱动
+  </div>
+
+        
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/muse.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+</body>
+</html>

@@ -1,0 +1,634 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 7.3.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"qiweipeng.github.io","root":"/","scheme":"Muse","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
+  </script>
+
+  <meta name="description" content="本文基本涵盖 Swift 中关于构造器的所有基础知识点，错误难免，希望各位指正。 基本使用 “Initialization is the process of preparing an instance of a class, structure, or enumeration for use. This process involves setting an initial value for">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Swift 的构造过程（Initialization）详解">
+<meta property="og:url" content="https://qiweipeng.github.io/2018/03/15/initialization-in-swift/index.html">
+<meta property="og:site_name" content="齐卫鹏的博客">
+<meta property="og:description" content="本文基本涵盖 Swift 中关于构造器的所有基础知识点，错误难免，希望各位指正。 基本使用 “Initialization is the process of preparing an instance of a class, structure, or enumeration for use. This process involves setting an initial value for">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://raw.githubusercontent.com/qiweipeng/images/master/20201001105919.png">
+<meta property="og:image" content="https://raw.githubusercontent.com/qiweipeng/images/master/20201001105926.png">
+<meta property="og:image" content="https://raw.githubusercontent.com/qiweipeng/images/master/20201001105933.png">
+<meta property="article:published_time" content="2018-03-15T15:07:29.000Z">
+<meta property="article:modified_time" content="2024-11-26T07:58:51.052Z">
+<meta property="article:author" content="齐卫鹏">
+<meta property="article:tag" content="Swift">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://raw.githubusercontent.com/qiweipeng/images/master/20201001105919.png">
+
+<link rel="canonical" href="https://qiweipeng.github.io/2018/03/15/initialization-in-swift/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'zh-CN'
+  };
+</script>
+
+  <title>Swift 的构造过程（Initialization）详解 | 齐卫鹏的博客</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">齐卫鹏的博客</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+      <p class="site-subtitle" itemprop="description">欢迎</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a>
+
+  </li>
+  </ul>
+</nav>
+
+
+
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://qiweipeng.github.io/2018/03/15/initialization-in-swift/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="齐卫鹏">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="齐卫鹏的博客">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          Swift 的构造过程（Initialization）详解
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2018-03-15 23:07:29" itemprop="dateCreated datePublished" datetime="2018-03-15T23:07:29+08:00">2018-03-15</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2024-11-26 15:58:51" itemprop="dateModified" datetime="2024-11-26T15:58:51+08:00">2024-11-26</time>
+              </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <p>本文基本涵盖 Swift 中关于构造器的所有基础知识点，错误难免，希望各位指正。</p>
+<h2 id="基本使用"><a href="#基本使用" class="headerlink" title="基本使用"></a>基本使用</h2><blockquote>
+<p>“Initialization is the process of preparing an instance of a class, structure, or enumeration for use. This process involves setting an initial value for each stored property on that instance and performing any other setup or initialization that is required before the new instance is ready for use.”</p>
+</blockquote>
+<blockquote>
+<p>Excerpt From: Apple Inc. “The Swift Programming Language (Swift 4.1).” iBooks. </p>
+</blockquote>
+<p>这是官方的定义，从中可以看到：</p>
+<ul>
+<li>构造器可以使用的场景不仅仅是类，还可以是结构体和枚举（我们知道 Swift 中的结构体和枚举的强大已经不是 Objective-C 可以相比的了）；</li>
+<li>实例在构造完成之前是无法使用的；</li>
+<li>构造过程主要是包括存储型属性的赋初值的过程，另外还包括一些其他必须的设置和初始化工作；</li>
+</ul>
+<p>为了阅读的通畅，我们先展示类、结构体、枚举的构造过程，这样可以有一个初步的认识。之后再进一步深入。</p>
+<h3 id="类的构造过程"><a href="#类的构造过程" class="headerlink" title="类的构造过程"></a>类的构造过程</h3><figure class="highlight swift"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">Person</span> &#123;</span><br><span class="line">    <span class="keyword">var</span> name: <span class="type">String</span></span><br><span class="line">    <span class="keyword">let</span> id: <span class="type">String</span></span><br><span class="line">    </span><br><span class="line">    <span class="keyword">init</span>(<span class="params">name</span>: <span class="type">String</span>, <span class="params">id</span>: <span class="type">String</span>) &#123;</span><br><span class="line">        <span class="keyword">self</span>.name <span class="operator">=</span> name</span><br><span class="line">        <span class="keyword">self</span>.id <span class="operator">=</span> id</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">let</span> roger <span class="operator">=</span> <span class="type">Person</span>(name: <span class="string">&quot;Roger&quot;</span>, id: <span class="string">&quot;123456&quot;</span>)</span><br></pre></td></tr></table></figure>
+
+<p>这里定义一个 <code>Person</code> 类，拥有两个属性，<code>name</code>（因为名字可以更改，所以是 <code>var</code>，又因为所有人都要有名字，所以是非可选型）和 <code>id</code>（ID 一般是无法更改的，所以是 <code>let</code>）。Swift 中的构造器没有返回值，在其中我们完成了两个属性的初始化。</p>
+<blockquote>
+<p>属性是可以赋默认值的，没有赋默认值的属性必须在构造器中完成初始化；赋默认值的属性如果没有在构造器中完成初始化，构造过程会用其默认值为其初始化。</p>
+</blockquote>
+<p>上面代码我们暂且让 <code>id</code> 可更改，我们为其设置一个默认值 <code>&quot;000000&quot;</code>：</p>
+<figure class="highlight swift"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">Person</span> &#123;</span><br><span class="line">    <span class="keyword">var</span> name: <span class="type">String</span></span><br><span class="line">    <span class="keyword">var</span> id: <span class="type">String</span> <span class="operator">=</span> <span class="string">&quot;000000&quot;</span></span><br><span class="line">    </span><br><span class="line">    <span class="keyword">init</span>(<span class="params">name</span>: <span class="type">String</span>) &#123;</span><br><span class="line">        <span class="keyword">self</span>.name <span class="operator">=</span> name</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">let</span> roger <span class="operator">=</span> <span class="type">Person</span>(name: <span class="string">&quot;Roger&quot;</span>)</span><br><span class="line">roger.id <span class="comment">// &quot;000000&quot;</span></span><br></pre></td></tr></table></figure>
+
+<p>可以看到，构造过程中我们只初始化了一个属性，有默认值的属性如果在这个过程中没有被初始化，那么会自动通过默认值为其初始化。</p>
+<blockquote>
+<p>类只有一种情况下会提供默认的构造器，就是这个类的所有属性均存在默认值，并且还没有自定义构造器的情况，这个默认的构造器就是无参数的构造器。</p>
+</blockquote>
+<figure class="highlight swift"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">Person</span> &#123;</span><br><span class="line">    <span class="keyword">var</span> name: <span class="type">String</span> <span class="operator">=</span> <span class="string">&quot;Guest&quot;</span></span><br><span class="line">    <span class="keyword">var</span> id: <span class="type">String</span> <span class="operator">=</span> <span class="string">&quot;000000&quot;</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">let</span> roger <span class="operator">=</span> <span class="type">Person</span>()</span><br><span class="line">roger.name <span class="comment">// &quot;Guest&quot;</span></span><br><span class="line">roger.id <span class="comment">// &quot;000000&quot;</span></span><br></pre></td></tr></table></figure>
+
+<p>我们把两个属性均设置了默认值，那么即使我们没有提供构造器，也是可以通过 <code>Person()</code> 构造出一个实例，这个实例的所有属性全是默认值。</p>
+<h3 id="结构体的构造过程"><a href="#结构体的构造过程" class="headerlink" title="结构体的构造过程"></a>结构体的构造过程</h3><figure class="highlight swift"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">struct</span> <span class="title class_">Location</span> &#123;</span><br><span class="line">    <span class="keyword">let</span> latitude: <span class="type">Double</span></span><br><span class="line">    <span class="keyword">let</span> longitude: <span class="type">Double</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">let</span> myLocation <span class="operator">=</span> <span class="type">Location</span>(latitude: <span class="number">39.1</span>, longitude: <span class="number">115.2</span>)</span><br></pre></td></tr></table></figure>
+
+<p>可以看到，结构体中我们没有设置构造器，但还是使用了一个全参数的构造器完成了构造过程。</p>
+<blockquote>
+<p>如果没有自定义构造器，结构体会默认提供一个包含全部属性作为参数的构造器；如果结构体的所有属性均设置了默认值，那么还会额外提供一个无参数的构造器。</p>
+</blockquote>
+<figure class="highlight swift"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">struct</span> <span class="title class_">Location</span> &#123;</span><br><span class="line">    <span class="keyword">var</span> latitude: <span class="type">Double</span> <span class="operator">=</span> <span class="number">1.11</span></span><br><span class="line">    <span class="keyword">var</span> longitude: <span class="type">Double</span> <span class="operator">=</span> <span class="number">2.22</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">var</span> myLocation <span class="operator">=</span> <span class="type">Location</span>()</span><br><span class="line"><span class="keyword">var</span> myLocation2 <span class="operator">=</span> <span class="type">Location</span>(latitude: <span class="number">39.1</span>, longitude: <span class="number">115.2</span>)</span><br></pre></td></tr></table></figure>
+
+<p>可以看到，我们通过无参数或者是全参数的构造器，都构造出了一个实例。</p>
+<blockquote>
+<p>需要说明的是，即使部分属性已经设置了默认值，那么系统默认提供的还是一个全参数的构造器。</p>
+</blockquote>
+<h3 id="枚举的构造过程"><a href="#枚举的构造过程" class="headerlink" title="枚举的构造过程"></a>枚举的构造过程</h3><figure class="highlight swift"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">enum</span> <span class="title class_">Rating</span> &#123;</span><br><span class="line">    <span class="keyword">case</span> perfect</span><br><span class="line">    <span class="keyword">case</span> great</span><br><span class="line">    <span class="keyword">case</span> good</span><br><span class="line">    <span class="keyword">case</span> bad</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">init?</span>(<span class="params">score</span>: <span class="type">Int</span>) &#123;</span><br><span class="line">        <span class="keyword">switch</span> score &#123;</span><br><span class="line">        <span class="keyword">case</span> <span class="number">90</span><span class="operator">...</span><span class="number">100</span>:</span><br><span class="line">            <span class="keyword">self</span> <span class="operator">=</span> .perfect</span><br><span class="line">        <span class="keyword">case</span> <span class="number">80</span><span class="operator">..&lt;</span><span class="number">90</span>:</span><br><span class="line">            <span class="keyword">self</span> <span class="operator">=</span> .great</span><br><span class="line">        <span class="keyword">case</span> <span class="number">60</span><span class="operator">..&lt;</span><span class="number">80</span>:</span><br><span class="line">            <span class="keyword">self</span> <span class="operator">=</span> .good</span><br><span class="line">        <span class="keyword">case</span> <span class="number">0</span><span class="operator">..&lt;</span><span class="number">60</span>:</span><br><span class="line">            <span class="keyword">self</span> <span class="operator">=</span> .bad</span><br><span class="line">        <span class="keyword">default</span>:</span><br><span class="line">            <span class="keyword">return</span> <span class="literal">nil</span></span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">let</span> rating1 <span class="operator">=</span> <span class="type">Rating</span>.perfect</span><br><span class="line"><span class="keyword">let</span> rating2 <span class="operator">=</span> <span class="type">Rating</span>(score: <span class="number">98</span>)</span><br></pre></td></tr></table></figure>
+
+<p>通常情况下，枚举变量可以通过 <code>类型名.case名</code> 的形式构造，这也是绝大多数的使用方式，不过 Swift 中我们仍然可以为枚举添加构造器。上面的例子中，我们通过得分来构造一个表示等级的枚举变量。最终两种构造方式都可以构造出一个枚举变量&#x2F;常量。</p>
+<p>需要说明的是，这个构造器是个可失败的构造器（它的语法就是在 <code>init</code> 后面增加一个问号），也就是允许构造失败（当传入的分数不在 0 到 100 的范围内的时候就构造失败），因此 <code>rating1</code> 的类型是 <code>Rating</code> 而 <code>rating2</code> 的类型是 <code>Rating?</code>，即它是一个可选型，使用时需要解包。</p>
+<h2 id="进一步理解"><a href="#进一步理解" class="headerlink" title="进一步理解"></a>进一步理解</h2><h3 id="自定义构造器"><a href="#自定义构造器" class="headerlink" title="自定义构造器"></a>自定义构造器</h3><p>显然我们无法只使用系统提供的构造器，况且很多情况下系统并不为我们提供构造器，这就需要我们自定义构造器。</p>
+<p>上述举例中其实已经涉及了自定义构造器，不过都是最基本的直接为属性赋值的方式，下面的例子可以看出，构造过程也可能存在更多的逻辑。</p>
+<figure class="highlight swift"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">Person</span> &#123;</span><br><span class="line">    <span class="keyword">var</span> name: <span class="type">String</span></span><br><span class="line">    </span><br><span class="line">    <span class="keyword">init</span>(<span class="params">firstName</span>: <span class="type">String</span>, <span class="params">lastName</span>: <span class="type">String</span>) &#123;</span><br><span class="line">        name <span class="operator">=</span> firstName.capitalized <span class="operator">+</span> <span class="string">&quot; &quot;</span> <span class="operator">+</span> lastName.capitalized</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">let</span> roger <span class="operator">=</span> <span class="type">Person</span>(firstName: <span class="string">&quot;roger&quot;</span>, lastName: <span class="string">&quot;federer&quot;</span>)</span><br><span class="line">roger.name <span class="comment">// &quot;Roger Federer&quot;</span></span><br></pre></td></tr></table></figure>
+
+<p>这个例子中我们把传入的两个参数值通过一定的逻辑后赋值给 <code>name</code> 属性。</p>
+<blockquote>
+<p>一旦自定义了构造器，那么系统将不再提供任何默认的构造器，即使属性都存在默认值。类和结构体都是如此。</p>
+</blockquote>
+<p>需要说明的一点是，这个例子中，构造器中使用的是 <code>name</code> 而非前面的 <code>self.name</code>，这是完全没问题的，前面的例子是因为参数变量的名字和属性名同名，那么在函数作用域内部，局部变量就占用了这个名字了。</p>
+<h3 id="构造器参数的默认值"><a href="#构造器参数的默认值" class="headerlink" title="构造器参数的默认值"></a>构造器参数的默认值</h3><p>在 Swift 中，构造器和普通函数一样，参数是可以提供默认值的</p>
+<figure class="highlight swift"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">Person</span> &#123;</span><br><span class="line">    <span class="keyword">var</span> name: <span class="type">String</span></span><br><span class="line">    <span class="keyword">var</span> age: <span class="type">Int</span></span><br><span class="line">    </span><br><span class="line">    <span class="keyword">init</span>(<span class="params">name</span>: <span class="type">String</span> <span class="operator">=</span> <span class="string">&quot;Guest&quot;</span>, <span class="params">age</span>: <span class="type">Int</span>) &#123;</span><br><span class="line">        <span class="keyword">self</span>.name <span class="operator">=</span> name</span><br><span class="line">        <span class="keyword">self</span>.age <span class="operator">=</span> age</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">let</span> guest <span class="operator">=</span> <span class="type">Person</span>(age: <span class="number">50</span>)</span><br><span class="line"><span class="keyword">let</span> roger <span class="operator">=</span> <span class="type">Person</span>(name: <span class="string">&quot;Roger&quot;</span>, age: <span class="number">36</span>)</span><br><span class="line"></span><br><span class="line">guest.name <span class="comment">// &quot;Guest&quot;</span></span><br></pre></td></tr></table></figure>
+
+<p>如果参数设置了默认值，那么系统会额外奉送一个构造器，那就是省略了所有默认参数的版本，上面的例子中，我们仅仅通过 <code>age</code> 作为参数也构造出了一个实例。</p>
+<h3 id="可失败的构造器"><a href="#可失败的构造器" class="headerlink" title="可失败的构造器"></a>可失败的构造器</h3><p>上面例子中，枚举的例子就是一个可失败的构造器，也就是允许返回 <code>nil</code>，响应的返回类型也是一个可选型。其语法很简单，就是 <code>init</code> 后面增加问号。</p>
+<p>在 Swift 标准库中，可失败的构造器有很多</p>
+<figure class="highlight swift"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">let</span> num1 <span class="operator">=</span> <span class="type">Int</span>(<span class="string">&quot;123&quot;</span>)</span><br><span class="line">num1 <span class="comment">// 123 类型为 Int?</span></span><br><span class="line"><span class="keyword">let</span> num2 <span class="operator">=</span> <span class="type">Int</span>(<span class="string">&quot;abc&quot;</span>)</span><br><span class="line">num2 <span class="comment">// nil 类型为 Int?</span></span><br></pre></td></tr></table></figure>
+
+<p>这是我们很常见的把字符串转为整型的方式，Swift 是通过 Int 的一个可失败的构造器完成的，因为很显然，不是所有的字符串都可以转成整型的。</p>
+<figure class="highlight swift"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">enum</span> <span class="title class_">Direction</span>: <span class="title class_ inherited__">Int</span> &#123;</span><br><span class="line">    <span class="keyword">case</span> east</span><br><span class="line">    <span class="keyword">case</span> south</span><br><span class="line">    <span class="keyword">case</span> west</span><br><span class="line">    <span class="keyword">case</span> north</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">let</span> d1 <span class="operator">=</span> <span class="type">Direction</span>(rawValue: <span class="number">0</span>) <span class="comment">// east</span></span><br><span class="line"><span class="keyword">let</span> d2 <span class="operator">=</span> <span class="type">Direction</span>(rawValue: <span class="number">4</span>) <span class="comment">// nil</span></span><br></pre></td></tr></table></figure>
+
+<p>有原始值的枚举通过原始值创建枚举变量的构造器也是一个可失败的构造器，上面的例子中，不是所有整数都能对应一个方向的。</p>
+<blockquote>
+<p>可失败的构造器的可失败性（暂且这么称呼吧）是可传递的，比如传递到便利构造器中（便利构造器后文会重点讲解）或者子类的构造器中。</p>
+</blockquote>
+<figure class="highlight swift"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">Person</span> &#123;</span><br><span class="line">    <span class="keyword">var</span> name: <span class="type">String</span></span><br><span class="line">    </span><br><span class="line">    <span class="keyword">init?</span>(<span class="params">name</span>: <span class="type">String</span>) &#123;</span><br><span class="line">        </span><br><span class="line">        <span class="keyword">if</span> name.count <span class="operator">&gt;</span> <span class="number">4</span> &#123;</span><br><span class="line">            <span class="keyword">return</span> <span class="literal">nil</span></span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">self</span>.name <span class="operator">=</span> name</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">Student</span>: <span class="title class_ inherited__">Person</span> &#123;</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">var</span> studentNumber: <span class="type">String</span></span><br><span class="line">    </span><br><span class="line">    <span class="comment">// 这个构造器如果不加 ? 就会报错 A non-failable initializer cannot chain to failable initializer &#x27;init(name:)&#x27; written with &#x27;init?&#x27;</span></span><br><span class="line">    <span class="keyword">init?</span>(<span class="params">name</span>: <span class="type">String</span>, <span class="params">studentNumber</span>: <span class="type">String</span>) &#123;</span><br><span class="line">        <span class="keyword">self</span>.studentNumber <span class="operator">=</span> studentNumber</span><br><span class="line">        <span class="keyword">super</span>.<span class="keyword">init</span>(name: name)</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">let</span> student <span class="operator">=</span> <span class="type">Student</span>(name: <span class="string">&quot;小泉纯一郎&quot;</span>, studentNumber: <span class="number">123456</span>) <span class="comment">// nil</span></span><br></pre></td></tr></table></figure>
+
+<p>这个例子中，我们假定 <code>name</code> 只能是中国人名，我们简单的限制字符数只能不大于 4，否则构造失败，那么 <code>Student</code> 类的构造器由于调用了父类的可失败的构造器，那么这个构造器就也要是一个可失败的构造器才行。</p>
+<p>还有一种解决方式是处理最终构造出来的对象比如强制解包（<code>super.init(name: name)!</code>），但这显然是不推荐的。</p>
+<h3 id="属性是可选型的情况下的构造过程"><a href="#属性是可选型的情况下的构造过程" class="headerlink" title="属性是可选型的情况下的构造过程"></a>属性是可选型的情况下的构造过程</h3><p>很多人一开始学习 Swift 时不理解为什么可选型属性可以不用初始化，只好死记硬背，其实这很好理解，只需要记住一句话：</p>
+<blockquote>
+<p>可选型属性即使只声明，其也有默认值，它的默认值是 nil</p>
+</blockquote>
+<p>也就是说，可选型属性即使只声明，其也具有默认值，这样就解释了为什么其“不用初始化”，实质上它和其他拥有默认值的属性一样，如果没有在构造器中初始化，那么构造过程就会默认用 nil 将其初始化。可选型本质上是枚举，nil 只是它的一个值而已。</p>
+<figure class="highlight swift"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">Person</span> &#123;</span><br><span class="line">    <span class="keyword">var</span> name: <span class="type">String</span></span><br><span class="line">    <span class="keyword">var</span> country: <span class="type">String</span>?</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">init</span>(<span class="params">name</span>: <span class="type">String</span>) &#123;</span><br><span class="line">        <span class="keyword">self</span>.name <span class="operator">=</span> name</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">let</span> roger <span class="operator">=</span> <span class="type">Person</span>(name: <span class="string">&quot;Roger&quot;</span>)</span><br><span class="line">roger.country <span class="comment">// 构造器没有为其初始化，那么它就初始化成默认值 nil</span></span><br></pre></td></tr></table></figure>
+
+<h2 id="类的两段式构造"><a href="#类的两段式构造" class="headerlink" title="类的两段式构造"></a>类的两段式构造</h2><h3 id="基本介绍"><a href="#基本介绍" class="headerlink" title="基本介绍"></a>基本介绍</h3><p>类因为有继承的特性，构造器不仅仅要完成本类属性初始化这么简单，它还要考虑父类继承来的属性如何初始化，以及其他逻辑的实现，于是就有了两段式构造的特征。</p>
+<figure class="highlight swift"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">Person</span> &#123;</span><br><span class="line">    <span class="keyword">var</span> name: <span class="type">String</span></span><br><span class="line">    <span class="keyword">var</span> id: <span class="type">String</span> <span class="operator">=</span> <span class="string">&quot;000000&quot;</span></span><br><span class="line">    </span><br><span class="line">    <span class="keyword">init</span>(<span class="params">name</span>: <span class="type">String</span>) &#123;</span><br><span class="line">        <span class="keyword">self</span>.name <span class="operator">=</span> name</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">Student</span>: <span class="title class_ inherited__">Person</span> &#123;</span><br><span class="line">    <span class="keyword">var</span> studentNumber: <span class="type">String</span></span><br><span class="line">    </span><br><span class="line">    <span class="keyword">init</span>(<span class="params">name</span>: <span class="type">String</span>, <span class="params">id</span>: <span class="type">String</span>, <span class="params">studentNumber</span>: <span class="type">String</span>) &#123;</span><br><span class="line">        <span class="comment">// 第一段构造，先进行本类的属性的初始化，再通过调用父类构造器完成继承自父类的属性的初始化</span></span><br><span class="line">        <span class="keyword">self</span>.studentNumber <span class="operator">=</span> studentNumber</span><br><span class="line">        <span class="keyword">super</span>.<span class="keyword">init</span>(name: name)</span><br><span class="line">        </span><br><span class="line">        <span class="comment">// 第二段构造，为父类的其他提供默认值的属性初始化；完成其他逻辑，此时已经可以使用 self 调用实例方法或属性</span></span><br><span class="line">        <span class="keyword">self</span>.id <span class="operator">=</span> id</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">let</span> harry <span class="operator">=</span> <span class="type">Student</span>(name: <span class="string">&quot;Harry&quot;</span>, id: <span class="string">&quot;654321&quot;</span>, studentNumber: <span class="string">&quot;123456&quot;</span>)</span><br></pre></td></tr></table></figure>
+
+<p>这个例子中，子类的构造器里我们做了三件事：</p>
+<ul>
+<li>为本类的属性初始化</li>
+<li>通过调用父类构造器完成从父类继承的属性的初始化</li>
+<li>为父类中已经提供默认值的属性初始化（当然这一步还可以做更多其他逻辑，可以调用实例方法）</li>
+</ul>
+<blockquote>
+<p>“Notice that the initializer for the EquilateralTriangle class has three different steps:</p>
+<ol>
+<li>Setting the value of properties that the subclass declares.</li>
+<li>Calling the superclass’s initializer.</li>
+<li>Changing the value of properties defined by the superclass. Any additional setup work that uses methods, getters, or setters can also be done at this point.”</li>
+</ol>
+</blockquote>
+<blockquote>
+<p>Excerpt From: Apple Inc. “The Swift Programming Language (Swift 4.1).” iBooks. </p>
+</blockquote>
+<p>其中前两步就是第一段的构造过程，这一段实质上已经完成了实例的构造，第一段构造构造完成，这个实例就已经可以使用了。</p>
+<p>那么为什么还要第二段构造呢？我们可以看上面的例子，这个例子中，父类继承的属性 <code>id</code> 如何在子类中初始化呢？首先我们要知道父类继承来的属性必须通过调用父类构造器完成初始化，可是此时父类提供的构造器是把 <code>id</code> 属性按照其默认值进行初始化的，也就是说，在子类中，我们最初构造出的这个实例，其 <code>id</code> 属性只能是它的默认值 <code>000000</code>，那么我们在子类还希望按照自己的意愿为其赋初值啊？那么就应该在第二段构造过程中进行，这一段构造过程本质上其实并不再是赋初值的过程，而是更改值的过程（之前写短文讨论过属性观察器的触发时机，第二段构造中属性的赋值已经可以触发属性观察器了）。</p>
+<p>额外说明一个小地方，这里 <code>super</code> 调用父类构造器是必须进行的吗？答案是是的！但还是有可以省略的情况的（省略不写不代表没有调用），但这既少见也不建议，比如下面：</p>
+<figure class="highlight swift"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">Person</span> &#123;</span><br><span class="line">    <span class="keyword">var</span> name: <span class="type">String</span> <span class="operator">=</span> <span class="string">&quot;Guest&quot;</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">Student</span>: <span class="title class_ inherited__">Person</span> &#123;</span><br><span class="line">    <span class="keyword">var</span> studentNumber: <span class="type">String</span></span><br><span class="line">    </span><br><span class="line">    <span class="keyword">init</span>(<span class="params">studentNumber</span>: <span class="type">String</span>) &#123;</span><br><span class="line">        <span class="keyword">self</span>.studentNumber <span class="operator">=</span> studentNumber</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">let</span> harry <span class="operator">=</span> <span class="type">Student</span>(studentNumber: <span class="string">&quot;123456&quot;</span>)</span><br><span class="line">harry.name <span class="comment">// &quot;Guest&quot;</span></span><br></pre></td></tr></table></figure>
+
+<h3 id="Swift-中类的构造过程与-Objective-C-的对比"><a href="#Swift-中类的构造过程与-Objective-C-的对比" class="headerlink" title="Swift 中类的构造过程与 Objective-C 的对比"></a>Swift 中类的构造过程与 Objective-C 的对比</h3><p>很多程序员从 Objective-C 转到 Swift 后，都会有一个疑惑。</p>
+<p>为什么 Objective-C 中 都是先调用 <code>super</code>，再为属性赋值，而 Swift 中却是颠倒，必须先为属性赋值，才能调用 <code>super</code> 呢？</p>
+<p>阅读了前文相信不少人已经有了答案。我们先来看看 Objective-C 一般是怎么做的：</p>
+<figure class="highlight objc"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// QWPPerson 类</span></span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">@interface</span> <span class="title">QWPPerson</span> : <span class="title">NSObject</span></span></span><br><span class="line"></span><br><span class="line"><span class="keyword">@property</span> (<span class="keyword">nonatomic</span>, <span class="keyword">copy</span>) <span class="built_in">NSString</span> *name;</span><br><span class="line"></span><br><span class="line">- (<span class="keyword">instancetype</span>)initWithName:(<span class="built_in">NSString</span> *)name;</span><br><span class="line"></span><br><span class="line"><span class="keyword">@end</span></span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">@implementation</span> <span class="title">QWPPerson</span></span></span><br><span class="line"></span><br><span class="line">- (<span class="keyword">instancetype</span>)initWithName:(<span class="built_in">NSString</span> *)name &#123;</span><br><span class="line">    <span class="keyword">self</span> = [<span class="variable language_">super</span> init];</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">if</span> (<span class="keyword">self</span>) &#123;</span><br><span class="line">        _name = name;</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">return</span> <span class="keyword">self</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">@end</span></span><br><span class="line"></span><br><span class="line"><span class="comment">// QWPStudent 类</span></span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">@interface</span> <span class="title">QWPStudent</span> : <span class="title">QWPPerson</span></span></span><br><span class="line"></span><br><span class="line"><span class="keyword">@property</span> (<span class="keyword">nonatomic</span>, <span class="keyword">assign</span>) <span class="built_in">NSInteger</span> studentNumber;</span><br><span class="line"></span><br><span class="line">- (<span class="keyword">instancetype</span>)initWithName:(<span class="built_in">NSString</span> *)name andStudentNumber:(<span class="built_in">NSInteger</span>)studentNumber;</span><br><span class="line"></span><br><span class="line"><span class="keyword">@end</span></span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">@implementation</span> <span class="title">QWPStudent</span></span></span><br><span class="line"></span><br><span class="line">- (<span class="keyword">instancetype</span>)initWithName:(<span class="built_in">NSString</span> *)name andStudentNumber:(<span class="built_in">NSInteger</span>)studentNumber &#123;</span><br><span class="line">    <span class="keyword">self</span> = [<span class="variable language_">super</span> initWithName:name];</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">if</span> (<span class="keyword">self</span>) &#123;</span><br><span class="line">        _studentNumber = studentNumber;</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">return</span> <span class="keyword">self</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">@end</span></span><br></pre></td></tr></table></figure>
+
+<p>通常我们都是这样写的，很多文章里的解释是，我们先调用 <code>super</code> 完成父类的初始化，然后再进行本类的初始化。</p>
+<p>我们对比一下 Swift，发现什么了么？其实很简单，这里所谓的“父类的初始化”，就是 Swift 中的第一段的构造过程，只不过 Objective-C 中所有属性都有默认值，那就是 0（nil 也是 0）。所以第一阶段构造实例的过程完全是把所有属性按照默认值去初始化构造出了这个实例，而所谓的“本类的初始化”就很像 Swift 中的第二段构造过程，这里实例已经创建（如果 if 判断成立的话），之后在里面其实是修改属性的值而已，从 0 修改成一个非 0 的值。</p>
+<p>也就是说 Swift 的构造过程相对更灵活，它可以不必一开始只能用默认值去构造这个实例。所以 Swift 的构造过程并不是说把 <code>super</code> 交换到了后面，而是在 <code>super</code> 前面增加了更多的灵活性。</p>
+<blockquote>
+<p>“Swift’s two-phase initialization process is similar to initialization in Objective-C. The main difference is that during phase 1, Objective-C assigns zero or null values (such as 0 or nil) to every property. Swift’s initialization flow is more flexible in that it lets you set custom initial values, and can cope with types for which 0 or nil is not a valid default value.”</p>
+</blockquote>
+<blockquote>
+<p>Excerpt From: Apple Inc. “The Swift Programming Language (Swift 4.1).” iBooks. </p>
+</blockquote>
+<p>对于 Objective-C，我们可以模仿 Swift 尝试一种从没写过的方式：</p>
+<figure class="highlight objc"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">- (<span class="keyword">instancetype</span>)initWithName:(<span class="built_in">NSString</span> *)name andStudentNumber:(<span class="built_in">NSInteger</span>)studentNumber &#123;</span><br><span class="line">    _studentNumber = studentNumber;</span><br><span class="line">    <span class="keyword">self</span> = [<span class="variable language_">super</span> initWithName:name];</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">if</span> (<span class="keyword">self</span>) &#123;</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">return</span> <span class="keyword">self</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>我们把 <code>studentNumber</code> 的属性初始化提前到 <code>super</code> 调用之前尝试一下，结果仍然可以成功创建实例。</p>
+<h3 id="小结"><a href="#小结" class="headerlink" title="小结"></a>小结</h3><p>不管是默认提供的构造器，还是自定义的构造器，还是说类的两段式构造方式，其核心其实都在做一件事，那就是必须保证所有的属性都初始化！只有所有属性都初始化，这个实例才算构造完成，才可以使用。</p>
+<h2 id="值类型的构造器代理（Initializer-Delegation）"><a href="#值类型的构造器代理（Initializer-Delegation）" class="headerlink" title="值类型的构造器代理（Initializer Delegation）"></a>值类型的构造器代理（Initializer Delegation）</h2><blockquote>
+<p>“Initializers can call other initializers to perform part of an instance’s initialization. This process, known as initializer delegation, avoids duplicating code across multiple initializers.”</p>
+</blockquote>
+<blockquote>
+<p>Excerpt From: Apple Inc. “The Swift Programming Language (Swift 4.1).” iBooks. </p>
+</blockquote>
+<p>名字很唬人，但其实就是一个构造器中可以调用另一个构造器。</p>
+<p>这一节我们只讨论值类型的，也就是不考虑类，我们以结构体为例。</p>
+<figure class="highlight swift"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">struct</span> <span class="title class_">Size</span> &#123;</span><br><span class="line">    <span class="keyword">var</span> width <span class="operator">=</span> <span class="number">0.0</span></span><br><span class="line">    <span class="keyword">var</span> height <span class="operator">=</span> <span class="number">0.0</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">struct</span> <span class="title class_">Point</span> &#123;</span><br><span class="line">    <span class="keyword">var</span> x <span class="operator">=</span> <span class="number">0.0</span></span><br><span class="line">    <span class="keyword">var</span> y <span class="operator">=</span> <span class="number">0.0</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">struct</span> <span class="title class_">Rect</span> &#123;</span><br><span class="line">    <span class="keyword">var</span> origin <span class="operator">=</span> <span class="type">Point</span>()</span><br><span class="line">    <span class="keyword">var</span> size <span class="operator">=</span> <span class="type">Size</span>()</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">init</span>(<span class="params">origin</span>: <span class="type">Point</span>, <span class="params">size</span>: <span class="type">Size</span>) &#123;</span><br><span class="line">        <span class="keyword">self</span>.origin <span class="operator">=</span> origin</span><br><span class="line">        <span class="keyword">self</span>.size <span class="operator">=</span> size</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">init</span>(<span class="params">center</span>: <span class="type">Point</span>, <span class="params">size</span>: <span class="type">Size</span>) &#123;</span><br><span class="line">        <span class="keyword">let</span> originX <span class="operator">=</span> center.x <span class="operator">-</span> size.width <span class="operator">/</span> <span class="number">2</span></span><br><span class="line">        <span class="keyword">let</span> originY <span class="operator">=</span> center.y <span class="operator">-</span> size.height <span class="operator">/</span> <span class="number">2</span></span><br><span class="line">        </span><br><span class="line">        <span class="comment">// 这里我们调用了另一个构造器完成了构造过程</span></span><br><span class="line">        <span class="keyword">self</span>.<span class="keyword">init</span>(origin: <span class="type">Point</span>(x: originX, y: originY), size: size)</span><br><span class="line">        </span><br><span class="line">        <span class="comment">// 当然这个例子我们也可以不通过调用其他构造器完成构造过程</span></span><br><span class="line">        <span class="comment">//        self.origin = Point(x: originX, y: originY)</span></span><br><span class="line">        <span class="comment">//        self.size = size</span></span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>通过 <code>self</code> 我们可以在一个构造器中调用另一个构造器，这简化了一些重复代码。</p>
+<p>相信很多了解 Swift 的同学会发现，这和类中的便利构造器很像啊。是的，便利构造器也是一种构造器代理，只不过由于结构体没有继承的特性，那么这里的构造器不用区分什么便利不便利，大家都一样，不用加 <code>convenience</code> 关键字。</p>
+<p>下面我们就逐步开始讲解 Swift 构造过程中较难的地方了，我们就从便利构造器开始。</p>
+<h2 id="类的继承和构造过程"><a href="#类的继承和构造过程" class="headerlink" title="类的继承和构造过程"></a>类的继承和构造过程</h2><h3 id="便利构造器和指定构造器"><a href="#便利构造器和指定构造器" class="headerlink" title="便利构造器和指定构造器"></a>便利构造器和指定构造器</h3><blockquote>
+<p>首先要确定，便利构造器和指定构造器的概念只存在于类中，值类型是不做区分的。<br>便利构造器也是构造器代理的一种情况。<br>类中的非便利构造器就是指定构造器。<br>便利构造器中仍然可以调用另一个便利构造器，这是没有问题的，但是最终都会去调用一个指定构造器。</p>
+</blockquote>
+<p>我们只提便利构造器的话，它也很简单，和上面值类型的情况差不多。</p>
+<figure class="highlight swift"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">Person</span> &#123;</span><br><span class="line">    <span class="keyword">var</span> name: <span class="type">String</span></span><br><span class="line">    <span class="keyword">var</span> age: <span class="type">Int</span></span><br><span class="line">    </span><br><span class="line">    <span class="keyword">init</span>(<span class="params">name</span>: <span class="type">String</span>, <span class="params">age</span>: <span class="type">Int</span>) &#123;</span><br><span class="line">        <span class="keyword">self</span>.name <span class="operator">=</span> name</span><br><span class="line">        <span class="keyword">self</span>.age <span class="operator">=</span> age</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    <span class="comment">// 便利构造器必须增加 convenience 关键字</span></span><br><span class="line">    <span class="keyword">convenience</span> <span class="keyword">init</span>(<span class="params">firstName</span>: <span class="type">String</span>, <span class="params">lastName</span>: <span class="type">String</span>, <span class="params">age</span>: <span class="type">Int</span>) &#123;</span><br><span class="line">        <span class="keyword">self</span>.<span class="keyword">init</span>(name: firstName <span class="operator">+</span> <span class="string">&quot; &quot;</span> <span class="operator">+</span> lastName, age: age)</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">let</span> roger <span class="operator">=</span> <span class="type">Person</span>(name: <span class="string">&quot;Roger Federer&quot;</span>, age: <span class="number">36</span>)</span><br><span class="line"><span class="keyword">let</span> roger2 <span class="operator">=</span> <span class="type">Person</span>(firstName: <span class="string">&quot;Roger&quot;</span>, lastName: <span class="string">&quot;Federer&quot;</span>, age: <span class="number">36</span>)</span><br></pre></td></tr></table></figure>
+
+<p>可以看到，和值类型不同的是，这里仅仅是多了一个 <code>convenience</code> 关键字，其他好像没什么区别，同样是增加了一个新的构造器。</p>
+<p>那还为什么要加这个关键字呢？那是因为类是有继承的特性的，增加了这个维度，很多东西就复杂起来啦。</p>
+<h3 id="构造器代理规则在类中的表现"><a href="#构造器代理规则在类中的表现" class="headerlink" title="构造器代理规则在类中的表现"></a>构造器代理规则在类中的表现</h3><p>前面我们了解了构造器的代理，其实就是一个构造器可以调用另一个构造器嘛，但是在加入继承这一维度之前，它们都是在调用本类中的其他构造器而已。</p>
+<p>再往前面的例子中，我们有继承的例子，那些例子中我们在子类的构造器中通过 <code>super</code> 关键字调用了父类的构造器，事实上这也是构造器代理。</p>
+<p>那么在类中，构造器代理满足什么样的规则呢？</p>
+<blockquote>
+<p>Rule 1<br>A designated initializer must call a designated initializer from its immediate superclass.<br>Rule 2<br>A convenience initializer must call another initializer from the same class.<br>Rule 3<br>A convenience initializer must ultimately call a designated initializer.”</p>
+</blockquote>
+<blockquote>
+<p>Excerpt From: Apple Inc. “The Swift Programming Language (Swift 4.1).” iBooks. </p>
+</blockquote>
+<p>总结下来就是三点：</p>
+<ul>
+<li>指定构造器只能调用父类的指定构造器（注意无法调用父类的便利构造器哦）</li>
+<li>便利构造器只能调用本类中的其他构造器（便利构造器中无法使用 <code>super</code> 关键字而只能使用 <code>self</code>）</li>
+<li>便利构造器最终一定会调用到一个指定的构造器（也就是说实例的构建本质上还是在指定构造器中构建的，便利构造器没有构造实例的能力，需要最终依靠指定构造器）</li>
+</ul>
+<p>下面这张图形象地解释了这种关系：</p>
+<p><img src="https://raw.githubusercontent.com/qiweipeng/images/master/20201001105919.png"></p>
+<p>图 1 - 构造器代理</p>
+<p>这样又我们可以把上面的三点总结为两点：</p>
+<ul>
+<li>指定构造器只能纵向调用</li>
+<li>便利构造器只能横向调用</li>
+</ul>
+<figure class="highlight swift"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">Person</span> &#123;</span><br><span class="line">    <span class="keyword">var</span> name: <span class="type">String</span></span><br><span class="line">    <span class="keyword">var</span> age: <span class="type">Int</span></span><br><span class="line">    </span><br><span class="line">    <span class="keyword">init</span>(<span class="params">name</span>: <span class="type">String</span>, <span class="params">age</span>: <span class="type">Int</span>) &#123;</span><br><span class="line">        <span class="keyword">self</span>.name <span class="operator">=</span> name</span><br><span class="line">        <span class="keyword">self</span>.age <span class="operator">=</span> age</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    <span class="comment">// 便利构造器只能调用本类中的其他构造器</span></span><br><span class="line">    <span class="keyword">convenience</span> <span class="keyword">init</span>(<span class="params">firstName</span>: <span class="type">String</span>, <span class="params">lastName</span>: <span class="type">String</span>, <span class="params">age</span>: <span class="type">Int</span>) &#123;</span><br><span class="line">        <span class="keyword">self</span>.<span class="keyword">init</span>(name: firstName <span class="operator">+</span> <span class="string">&quot; &quot;</span> <span class="operator">+</span> lastName, age: age)</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">Student</span>: <span class="title class_ inherited__">Person</span> &#123;</span><br><span class="line">    <span class="keyword">var</span> studentNumber: <span class="type">String</span></span><br><span class="line">    </span><br><span class="line">    <span class="keyword">init</span>(<span class="params">name</span>: <span class="type">String</span>, <span class="params">age</span>: <span class="type">Int</span>, <span class="params">studentNumber</span>: <span class="type">String</span>) &#123;</span><br><span class="line">        <span class="keyword">self</span>.studentNumber <span class="operator">=</span> studentNumber</span><br><span class="line">        <span class="comment">// 指定构造器只能调用父类的指定构造器</span></span><br><span class="line">        <span class="keyword">super</span>.<span class="keyword">init</span>(name: name, age: age)</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    <span class="comment">// 便利构造器只能调用本类中的其他构造器</span></span><br><span class="line">    <span class="keyword">convenience</span> <span class="keyword">init</span>(<span class="params">name</span>: <span class="type">String</span>, <span class="params">age</span>: <span class="type">Int</span>, <span class="params">id</span>: <span class="type">String</span>) &#123;</span><br><span class="line">        <span class="comment">// 这里我们假定学生的号码就是 id 号码前面加 2018</span></span><br><span class="line">        <span class="keyword">self</span>.<span class="keyword">init</span>(name: name, age: age, studentNumber: <span class="string">&quot;2018&quot;</span> <span class="operator">+</span> id)</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>这个例子中，就完全遵守这样的规则。</p>
+<h3 id="构造器的继承和重写"><a href="#构造器的继承和重写" class="headerlink" title="构造器的继承和重写"></a>构造器的继承和重写</h3><h4 id="构造器的继承"><a href="#构造器的继承" class="headerlink" title="构造器的继承"></a>构造器的继承</h4><figure class="highlight swift"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">Person</span> &#123;</span><br><span class="line">    <span class="keyword">var</span> name: <span class="type">String</span></span><br><span class="line">    <span class="keyword">var</span> age: <span class="type">Int</span></span><br><span class="line">    </span><br><span class="line">    <span class="keyword">init</span>(<span class="params">name</span>: <span class="type">String</span>, <span class="params">age</span>: <span class="type">Int</span>) &#123;</span><br><span class="line">        <span class="keyword">self</span>.name <span class="operator">=</span> name</span><br><span class="line">        <span class="keyword">self</span>.age <span class="operator">=</span> age</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">convenience</span> <span class="keyword">init</span>(<span class="params">firstName</span>: <span class="type">String</span>, <span class="params">lastName</span>: <span class="type">String</span>, <span class="params">age</span>: <span class="type">Int</span>) &#123;</span><br><span class="line">        <span class="keyword">self</span>.<span class="keyword">init</span>(name: firstName <span class="operator">+</span> <span class="string">&quot; &quot;</span> <span class="operator">+</span> lastName, age: age)</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>这里的父类我们仍然定义一个 <code>Person</code> 类，拥有一个指定构造器和一个便利构造器；接下来我们设置一个子类</p>
+<figure class="highlight swift"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">Student</span>: <span class="title class_ inherited__">Person</span> &#123;</span><br><span class="line">    <span class="keyword">var</span> studentNumber: <span class="type">String</span> <span class="operator">=</span> <span class="string">&quot;000000&quot;</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>为了测试构造器的继承，我们在这个子类中什么构造器都没写，只增加了一个具有默认值的属性；结果会怎么样呢？结果就是，我们可以成功使用前面的两个构造器构造出 <code>Student</code> 实例：</p>
+<figure class="highlight swift"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">let</span> harry <span class="operator">=</span> <span class="type">Student</span>(name: <span class="string">&quot;Harry&quot;</span>, age: <span class="number">11</span>)</span><br><span class="line"><span class="keyword">let</span> hermione <span class="operator">=</span> <span class="type">Student</span>(firstName: <span class="string">&quot;Hermione&quot;</span>, lastName: <span class="string">&quot;Granger&quot;</span>, age: <span class="number">12</span>)</span><br></pre></td></tr></table></figure>
+
+<p>是的，我们成功从父类继承了他的所有构造器，一个指定构造器，一个便利构造器。</p>
+<p>我们总结一下上面代码有什么特征：</p>
+<ul>
+<li>子类的所有属性都提供了默认值</li>
+<li>子类没有定义任何指定构造器（当然也不会定义便利构造器）</li>
+</ul>
+<p>带来的结果呢：</p>
+<ul>
+<li>子类继承了父类所有构造器，包括指定构造器和便利构造器</li>
+</ul>
+<p>现在我们开始改变了，首先我们尝试去掉子类属性 <code>studentNumber</code> 的默认值；结果报错了！提示 <code>Class &#39;Student&#39; has no initializers</code>，它告诉我们 <code>Student</code> 类没有构造器！刚才我们还继承了两个构造器，现在一下子一个也没有了。</p>
+<p>我们发现子类因为含有没有赋默认值的属性，父类的所有构造器就不再供子类继承了。这是为什么呢？答案很简单，因为父类的构造器无法完成子类属性的初始化。父类并不知道子类有什么属性，我们假设此时可以使用父类的构造器完成构造过程，那么子类的这个 <code>studentNumber</code> 属性应该被初始化成什么呢？</p>
+<p>于是我们只好自己自定义构造器了</p>
+<figure class="highlight swift"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">init</span>(<span class="params">name</span>: <span class="type">String</span>, <span class="params">age</span>: <span class="type">Int</span>, <span class="params">studentNumber</span>: <span class="type">String</span>) &#123;</span><br><span class="line">        <span class="keyword">self</span>.studentNumber <span class="operator">=</span> studentNumber</span><br><span class="line">        <span class="keyword">super</span>.<span class="keyword">init</span>(name: name, age: age)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>我们创建一个构造器，然后尝试创建实例，通过代码提示可以看到，此时子类只有一个构造器，就是我们新创建的这个构造器。父类的构造器仍然没有被继承。</p>
+<p>于是突然想到了父类方法是可以重写的，那么父类的构造器是否也能重写呢？答案是是的，我们此时可以重写父类的指定构造器。</p>
+<figure class="highlight swift"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 前面加 override 关键字实现对父类构造器的重写</span></span><br><span class="line"><span class="keyword">override</span> <span class="keyword">init</span>(<span class="params">name</span>: <span class="type">String</span>, <span class="params">age</span>: <span class="type">Int</span>) &#123;</span><br><span class="line">    studentNumber <span class="operator">=</span> <span class="string">&quot;000000&quot;</span></span><br><span class="line">    <span class="keyword">super</span>.<span class="keyword">init</span>(name: name, age: age)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>现在我们自己定义了一个，然后重写一个父类的，那么我们现在应该有两个了吧！我们尝试一下：</p>
+<figure class="highlight swift"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">let</span> harry <span class="operator">=</span> <span class="type">Student</span>(name: <span class="string">&quot;Harry&quot;</span>, age: <span class="number">11</span>, studentNumber: <span class="string">&quot;123456&quot;</span>)</span><br><span class="line"><span class="keyword">let</span> hermione <span class="operator">=</span> <span class="type">Student</span>(name: <span class="string">&quot;Hermione&quot;</span>, age: <span class="number">12</span>)</span><br><span class="line"><span class="keyword">let</span> ron <span class="operator">=</span> <span class="type">Student</span>(firstName: <span class="string">&quot;Ron&quot;</span>, lastName: <span class="string">&quot;Weasley&quot;</span>, age: <span class="number">11</span>)</span><br></pre></td></tr></table></figure>
+
+<p>我们竟然拥有了三个构造器！原来父类的便利构造器现在又被继承了！原因是：</p>
+<ul>
+<li>如果子类提供了所有父类指定构造器的实现，那么子类将继承父类所有的便利构造器</li>
+</ul>
+<p>这样，我们基本就了解了构造器的继承原则，它最终可以总结成下面两句话：</p>
+<ul>
+<li>当我们没有实现任何自定义构造器的情况下，子类继承所有父类指定构造器和便利构造器（当然这种情况一定是子类所有属性都有默认值的情况，不然会报错）</li>
+<li>当我们重写了所有父类指定构造器的情况下，子类额外继承父类的所有便利构造器</li>
+</ul>
+<p>当然也可以参考官方的说法，大同小异：</p>
+<blockquote>
+<p>Assuming that you provide default values for any new properties you introduce in a subclass, the following two rules apply:<br>Rule 1<br>If your subclass doesn’t define any designated initializers, it automatically inherits all of its superclass designated initializers.<br>Rule 2<br>If your subclass provides an implementation of all of its superclass designated initializers—either by inheriting them as per rule 1, or by providing a custom implementation as part of its definition—then it automatically inherits all of the superclass convenience initializers.”</p>
+</blockquote>
+<blockquote>
+<p>Excerpt From: Apple Inc. “The Swift Programming Language (Swift 4.1).” iBooks. </p>
+</blockquote>
+<h4 id="构造器的重写"><a href="#构造器的重写" class="headerlink" title="构造器的重写"></a>构造器的重写</h4><p>我们刚才注意到了，构造器是可以重写的，但是我们只重写了指定构造器。那么就有疑问了，便利构造器是否可以重写呢？答案是否定的，便利构造器无法被重写。但是有的同学却是看到过 <code>override convenience init</code> 的字眼出现，这是怎么回事呢？</p>
+<p>这是因为重写的父类指定构造器可以是便利构造器，但是便利构造器无法被重写！这里有些绕，我们拿官方的例子说明。</p>
+<figure class="highlight swift"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">Food</span> &#123;</span><br><span class="line">    <span class="keyword">var</span> name: <span class="type">String</span></span><br><span class="line">    <span class="keyword">init</span>(<span class="params">name</span>: <span class="type">String</span>) &#123;</span><br><span class="line">        <span class="keyword">self</span>.name <span class="operator">=</span> name</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">convenience</span> <span class="keyword">init</span>() &#123;</span><br><span class="line">        <span class="keyword">self</span>.<span class="keyword">init</span>(name: <span class="string">&quot;[Unnamed]&quot;</span>)</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>它的结构如下图所示：</p>
+<p><img src="https://raw.githubusercontent.com/qiweipeng/images/master/20201001105926.png"></p>
+<p>图 2 - 构造器重写1</p>
+<figure class="highlight swift"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">RecipeIngredient</span>: <span class="title class_ inherited__">Food</span> &#123;</span><br><span class="line">    <span class="keyword">var</span> quantity: <span class="type">Int</span></span><br><span class="line">    <span class="keyword">init</span>(<span class="params">name</span>: <span class="type">String</span>, <span class="params">quantity</span>: <span class="type">Int</span>) &#123;</span><br><span class="line">        <span class="keyword">self</span>.quantity <span class="operator">=</span> quantity</span><br><span class="line">        <span class="keyword">super</span>.<span class="keyword">init</span>(name: name)</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">override</span> <span class="keyword">convenience</span> <span class="keyword">init</span>(<span class="params">name</span>: <span class="type">String</span>) &#123;</span><br><span class="line">        <span class="keyword">self</span>.<span class="keyword">init</span>(name: name, quantity: <span class="number">1</span>)</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>我们此时又定义一个 <code>RecipeIngredient</code> 类，这个类中有一个自定义的构造器，它通过调用父类指定构造器完成构造；同时还有一个便利构造器，这个构造器通过调用本类的指定构造器完成构造；巧合的是，这个便利构造器和父类的那个指定构造器长的一模一样！于是没办法，它既是一个便利构造器，又完成了父类指定构造器的重写，所以又加上了 <code>override</code> 关键字。</p>
+<p>目前这两个类的结构如下图所示：</p>
+<p><img src="https://raw.githubusercontent.com/qiweipeng/images/master/20201001105933.png"></p>
+<p>图 3 - 构造器重写2</p>
+<blockquote>
+<p>子类并不是重写了一个父类的便利构造器，而是通过便利构造器的方式完成了对父类指定构造器的重写。</p>
+</blockquote>
+<p>于是我们又满足了上面的第二条原则，我们重写了所有父类的指定构造器，于是父类的所有便利构造器也被子类继承，现在子类拥有三个构造器。</p>
+<h3 id="required-构造器"><a href="#required-构造器" class="headerlink" title="required 构造器"></a>required 构造器</h3><blockquote>
+<p>构造器加上 required 关键字代表子类必须实现</p>
+</blockquote>
+<figure class="highlight swift"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">Person</span> &#123;</span><br><span class="line">    <span class="keyword">let</span> name: <span class="type">String</span></span><br><span class="line">    </span><br><span class="line">    <span class="comment">// 父类指定构造器</span></span><br><span class="line">    <span class="keyword">required</span> <span class="keyword">init</span>(<span class="params">name</span>: <span class="type">String</span>) &#123;</span><br><span class="line">        <span class="keyword">self</span>.name <span class="operator">=</span> name</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    <span class="comment">// 父类便利构造器</span></span><br><span class="line">    <span class="keyword">convenience</span> <span class="keyword">init</span>(<span class="params">firstName</span>: <span class="type">String</span>, <span class="params">lastName</span>: <span class="type">String</span>) &#123;</span><br><span class="line">        <span class="keyword">self</span>.<span class="keyword">init</span>(name: firstName <span class="operator">+</span> <span class="string">&quot; &quot;</span> <span class="operator">+</span> lastName)</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">Student</span>: <span class="title class_ inherited__">Person</span> &#123;</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">var</span> studentNumber: <span class="type">Int</span></span><br><span class="line">    </span><br><span class="line">    <span class="comment">// 对于 required 的构造器, 重载不需要再写 override, 而是还写 required</span></span><br><span class="line">    <span class="keyword">required</span> <span class="keyword">init</span>(<span class="params">name</span>: <span class="type">String</span>) &#123;</span><br><span class="line">        studentNumber <span class="operator">=</span> <span class="number">000</span></span><br><span class="line">        <span class="keyword">super</span>.<span class="keyword">init</span>(name: name)</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>对于 required 的构造器, 重载不需要再写 override, 而是还写 required。</p>
+
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/Swift/" rel="tag"># Swift</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2018/03/08/property-observers-in-swift/" rel="prev" title="Swift 中的 willSet 和 didSet">
+      <i class="fa fa-chevron-left"></i> Swift 中的 willSet 和 didSet
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/2018/04/06/git-ssh-key/" rel="next" title="macOS 下 Git 多账号配置，同时管理多个 SSH Key">
+      macOS 下 Git 多账号配置，同时管理多个 SSH Key <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%9F%BA%E6%9C%AC%E4%BD%BF%E7%94%A8"><span class="nav-number">1.</span> <span class="nav-text">基本使用</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%B1%BB%E7%9A%84%E6%9E%84%E9%80%A0%E8%BF%87%E7%A8%8B"><span class="nav-number">1.1.</span> <span class="nav-text">类的构造过程</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%BB%93%E6%9E%84%E4%BD%93%E7%9A%84%E6%9E%84%E9%80%A0%E8%BF%87%E7%A8%8B"><span class="nav-number">1.2.</span> <span class="nav-text">结构体的构造过程</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%9E%9A%E4%B8%BE%E7%9A%84%E6%9E%84%E9%80%A0%E8%BF%87%E7%A8%8B"><span class="nav-number">1.3.</span> <span class="nav-text">枚举的构造过程</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E8%BF%9B%E4%B8%80%E6%AD%A5%E7%90%86%E8%A7%A3"><span class="nav-number">2.</span> <span class="nav-text">进一步理解</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%87%AA%E5%AE%9A%E4%B9%89%E6%9E%84%E9%80%A0%E5%99%A8"><span class="nav-number">2.1.</span> <span class="nav-text">自定义构造器</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%9E%84%E9%80%A0%E5%99%A8%E5%8F%82%E6%95%B0%E7%9A%84%E9%BB%98%E8%AE%A4%E5%80%BC"><span class="nav-number">2.2.</span> <span class="nav-text">构造器参数的默认值</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%8F%AF%E5%A4%B1%E8%B4%A5%E7%9A%84%E6%9E%84%E9%80%A0%E5%99%A8"><span class="nav-number">2.3.</span> <span class="nav-text">可失败的构造器</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%B1%9E%E6%80%A7%E6%98%AF%E5%8F%AF%E9%80%89%E5%9E%8B%E7%9A%84%E6%83%85%E5%86%B5%E4%B8%8B%E7%9A%84%E6%9E%84%E9%80%A0%E8%BF%87%E7%A8%8B"><span class="nav-number">2.4.</span> <span class="nav-text">属性是可选型的情况下的构造过程</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%B1%BB%E7%9A%84%E4%B8%A4%E6%AE%B5%E5%BC%8F%E6%9E%84%E9%80%A0"><span class="nav-number">3.</span> <span class="nav-text">类的两段式构造</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%9F%BA%E6%9C%AC%E4%BB%8B%E7%BB%8D"><span class="nav-number">3.1.</span> <span class="nav-text">基本介绍</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Swift-%E4%B8%AD%E7%B1%BB%E7%9A%84%E6%9E%84%E9%80%A0%E8%BF%87%E7%A8%8B%E4%B8%8E-Objective-C-%E7%9A%84%E5%AF%B9%E6%AF%94"><span class="nav-number">3.2.</span> <span class="nav-text">Swift 中类的构造过程与 Objective-C 的对比</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%B0%8F%E7%BB%93"><span class="nav-number">3.3.</span> <span class="nav-text">小结</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%80%BC%E7%B1%BB%E5%9E%8B%E7%9A%84%E6%9E%84%E9%80%A0%E5%99%A8%E4%BB%A3%E7%90%86%EF%BC%88Initializer-Delegation%EF%BC%89"><span class="nav-number">4.</span> <span class="nav-text">值类型的构造器代理（Initializer Delegation）</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%B1%BB%E7%9A%84%E7%BB%A7%E6%89%BF%E5%92%8C%E6%9E%84%E9%80%A0%E8%BF%87%E7%A8%8B"><span class="nav-number">5.</span> <span class="nav-text">类的继承和构造过程</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%BE%BF%E5%88%A9%E6%9E%84%E9%80%A0%E5%99%A8%E5%92%8C%E6%8C%87%E5%AE%9A%E6%9E%84%E9%80%A0%E5%99%A8"><span class="nav-number">5.1.</span> <span class="nav-text">便利构造器和指定构造器</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%9E%84%E9%80%A0%E5%99%A8%E4%BB%A3%E7%90%86%E8%A7%84%E5%88%99%E5%9C%A8%E7%B1%BB%E4%B8%AD%E7%9A%84%E8%A1%A8%E7%8E%B0"><span class="nav-number">5.2.</span> <span class="nav-text">构造器代理规则在类中的表现</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%9E%84%E9%80%A0%E5%99%A8%E7%9A%84%E7%BB%A7%E6%89%BF%E5%92%8C%E9%87%8D%E5%86%99"><span class="nav-number">5.3.</span> <span class="nav-text">构造器的继承和重写</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%9E%84%E9%80%A0%E5%99%A8%E7%9A%84%E7%BB%A7%E6%89%BF"><span class="nav-number">5.3.1.</span> <span class="nav-text">构造器的继承</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%9E%84%E9%80%A0%E5%99%A8%E7%9A%84%E9%87%8D%E5%86%99"><span class="nav-number">5.3.2.</span> <span class="nav-text">构造器的重写</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#required-%E6%9E%84%E9%80%A0%E5%99%A8"><span class="nav-number">5.4.</span> <span class="nav-text">required 构造器</span></a></li></ol></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <p class="site-author-name" itemprop="name">齐卫鹏</p>
+  <div class="site-description" itemprop="description"></div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">44</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-tags">
+        <span class="site-state-item-count">13</span>
+        <span class="site-state-item-name">标签</span>
+      </div>
+  </nav>
+</div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2024</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">齐卫鹏</span>
+</div>
+  <div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://muse.theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Muse</a> 强力驱动
+  </div>
+
+        
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/muse.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+</body>
+</html>

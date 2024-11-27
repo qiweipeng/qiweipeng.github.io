@@ -1,0 +1,589 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 7.3.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"qiweipeng.github.io","root":"/","scheme":"Muse","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
+  </script>
+
+  <meta name="description" content="本文记录自己新装电脑后的软件安装和个性化配置，以及之后的维护。 软件安装App Store 1Password Spark Fantastical Todoist Notability MindNode Drafts Reeder Xcode Sequel Ace Wechat QQ Pages Keynote Numbers WPS Office Apple Developer Swift Pl">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Mac 电脑的个人配置">
+<meta property="og:url" content="https://qiweipeng.github.io/2020/10/09/my-mac-initial-configuration/index.html">
+<meta property="og:site_name" content="齐卫鹏的博客">
+<meta property="og:description" content="本文记录自己新装电脑后的软件安装和个性化配置，以及之后的维护。 软件安装App Store 1Password Spark Fantastical Todoist Notability MindNode Drafts Reeder Xcode Sequel Ace Wechat QQ Pages Keynote Numbers WPS Office Apple Developer Swift Pl">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://raw.githubusercontent.com/qiweipeng/images/master/20201010101100.png">
+<meta property="og:image" content="https://raw.githubusercontent.com/qiweipeng/images/master/20201010101109.png">
+<meta property="og:image" content="https://raw.githubusercontent.com/qiweipeng/images/master/20201009190201.png">
+<meta property="og:image" content="https://raw.githubusercontent.com/qiweipeng/images/master/20201009192119.png">
+<meta property="article:published_time" content="2020-10-09T15:19:25.000Z">
+<meta property="article:modified_time" content="2024-11-26T07:58:51.054Z">
+<meta property="article:author" content="齐卫鹏">
+<meta property="article:tag" content="计算机">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://raw.githubusercontent.com/qiweipeng/images/master/20201010101100.png">
+
+<link rel="canonical" href="https://qiweipeng.github.io/2020/10/09/my-mac-initial-configuration/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'zh-CN'
+  };
+</script>
+
+  <title>Mac 电脑的个人配置 | 齐卫鹏的博客</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">齐卫鹏的博客</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+      <p class="site-subtitle" itemprop="description">欢迎</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a>
+
+  </li>
+  </ul>
+</nav>
+
+
+
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://qiweipeng.github.io/2020/10/09/my-mac-initial-configuration/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="齐卫鹏">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="齐卫鹏的博客">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          Mac 电脑的个人配置
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2020-10-09 23:19:25" itemprop="dateCreated datePublished" datetime="2020-10-09T23:19:25+08:00">2020-10-09</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2024-11-26 15:58:51" itemprop="dateModified" datetime="2024-11-26T15:58:51+08:00">2024-11-26</time>
+              </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <p>本文记录自己新装电脑后的软件安装和个性化配置，以及之后的维护。</p>
+<h2 id="软件安装"><a href="#软件安装" class="headerlink" title="软件安装"></a>软件安装</h2><h3 id="App-Store"><a href="#App-Store" class="headerlink" title="App Store"></a>App Store</h3><ul>
+<li>1Password</li>
+<li>Spark</li>
+<li>Fantastical</li>
+<li>Todoist</li>
+<li>Notability</li>
+<li>MindNode</li>
+<li>Drafts</li>
+<li>Reeder</li>
+<li>Xcode</li>
+<li>Sequel Ace</li>
+<li>Wechat</li>
+<li>QQ</li>
+<li>Pages</li>
+<li>Keynote</li>
+<li>Numbers</li>
+<li>WPS Office</li>
+<li>Apple Developer</li>
+<li>Swift Playgrounds</li>
+<li>CloudMounter</li>
+<li>The Unarchiver</li>
+<li>Magnet</li>
+<li>Bear</li>
+<li>Amphetamine</li>
+<li>Petrify</li>
+<li>Cleaner for Xcode</li>
+<li>quicktype</li>
+</ul>
+<h3 id="Homebrew"><a href="#Homebrew" class="headerlink" title="Homebrew"></a>Homebrew</h3><p>安装 <a target="_blank" rel="noopener" href="https://brew.sh/">Homebrew</a>：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">/bin/bash -c &quot;$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)&quot;</span><br></pre></td></tr></table></figure>
+
+<p>使用 Homebrew 安装软件：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ brew install &lt;name&gt;</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>mysql</li>
+<li>git</li>
+<li>sqlite</li>
+<li>nvm（如果安装多版本 node）</li>
+<li>node（如果只安装单版本 node）</li>
+</ul>
+<p>使用 <code>brew cask</code> 安装应用：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ brew install --cask &lt;name&gt;</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>android-studio</li>
+<li>google-chrome</li>
+<li><del>oracle-jdk</del></li>
+<li>openjdk</li>
+<li>openjdk@8</li>
+<li>appcleaner</li>
+<li>iina</li>
+<li>pdf-expert</li>
+<li>baidunetdisk</li>
+<li>imazing</li>
+<li>picgo</li>
+<li>db-browser-for-sqlite</li>
+<li>iterm2</li>
+<li>postman</li>
+<li>downie</li>
+<li>moneywiz</li>
+<li>fliqlo</li>
+<li>mweb</li>
+<li>visual-studio-code</li>
+<li>github</li>
+<li>notion</li>
+<li>dash</li>
+<li>sketch</li>
+<li>figma</li>
+<li>feishu</li>
+</ul>
+<h3 id="手动安装"><a href="#手动安装" class="headerlink" title="手动安装"></a>手动安装</h3><ul>
+<li>SF Symbols</li>
+<li>ClashX</li>
+<li><del>trojan-qt5</del></li>
+</ul>
+<h2 id="配置和维护"><a href="#配置和维护" class="headerlink" title="配置和维护"></a>配置和维护</h2><h3 id="需要激活的-App"><a href="#需要激活的-App" class="headerlink" title="需要激活的 App"></a>需要激活的 App</h3><ul>
+<li>MoneyWiz</li>
+<li>MWeb</li>
+<li>Sketch</li>
+<li>PDF Expert</li>
+<li>Downie</li>
+</ul>
+<h3 id="系统配置"><a href="#系统配置" class="headerlink" title="系统配置"></a>系统配置</h3><h4 id="System-Preferences"><a href="#System-Preferences" class="headerlink" title="System Preferences"></a>System Preferences</h4><ul>
+<li><code>General</code> -&gt; <code>SideBar icon size</code>: <code>Small</code></li>
+<li><code>General</code> -&gt; <code>Recent items</code>: <code>5</code></li>
+<li><code>Desktop &amp; Screen Saver</code> -&gt; <code>Screen Saver</code>: Fliqlo</li>
+<li><code>Desktop &amp; Screen Saver</code> -&gt; <code>Start after</code>: <code>5 Minutes</code></li>
+<li><code>Dock</code> -&gt; <code>Position on screen</code>: <code>Left</code></li>
+<li><code>Dock</code> -&gt; <code>Show recent application in Dock</code>: <code>NO</code></li>
+<li><code>Notifications</code>: 对所有 App 进行配置</li>
+<li><code>Accessibility</code> -&gt; <code>Pointer Control</code> -&gt; <code>Trackpad Options</code> -&gt; <code>Enable dragging</code>: <code>three finger drag</code></li>
+<li><code>Security &amp; Privacy</code> -&gt; <code>General</code> -&gt; <code>Requeire passowrd</code>: <code>5seconds</code></li>
+<li><code>Security &amp; Privacy</code> -&gt; <code>FileVault</code>: <code>Turn On</code></li>
+<li><code>Security &amp; Privacy</code> -&gt; <code>Firewall</code>: <code>Turn On</code></li>
+<li><code>Keyboard</code> -&gt; <code>Text</code> -&gt; <code>Correct spelling automatically</code>: <code>NO</code></li>
+<li><code>Keyboard</code> -&gt; <code>Input Sources</code>: 增加小鹤双拼</li>
+<li><code>Trackpad</code>: 打开所有手势</li>
+<li><code>Displays</code> -&gt; <code>NightShift</code>: <code>Turn On</code></li>
+</ul>
+<h4 id="Finder"><a href="#Finder" class="headerlink" title="Finder"></a>Finder</h4><ul>
+<li><code>General</code> -&gt; <code>New Finder windows show</code>: qiweipeng</li>
+<li><code>Tags</code>: 添加到 Favorite Tags</li>
+<li><code>SideBar</code> -&gt; <code>Favorites</code>: 仅保留 Applications、Downloads、qiweipeng</li>
+</ul>
+<h4 id="Safari"><a href="#Safari" class="headerlink" title="Safari"></a>Safari</h4><ul>
+<li>首页 -&gt; <code>Show Frequently Visited</code>: <code>Turn Off</code></li>
+<li><code>General</code> -&gt; <code>Open &quot;safe&quot; files after downloading</code>: <code>No</code></li>
+<li><code>Search</code> -&gt; <code>Search engine</code>: <code>Google</code></li>
+<li><code>Advanced</code> -&gt; <code>Show Develop menu in menu bar</code>: <code>Yes</code></li>
+<li><code>Extensions</code>: 各个插件具体配置</li>
+</ul>
+<h4 id="其它"><a href="#其它" class="headerlink" title="其它"></a>其它</h4><ul>
+<li>FaceTime -&gt; <code>Ringtone</code>: Hillside</li>
+<li>Message -&gt; <code>Message received sound</code>: Bamboo</li>
+<li>所有的系统 App 打开 iCloud 账户同步功能</li>
+</ul>
+<h3 id="Homebrew-1"><a href="#Homebrew-1" class="headerlink" title="Homebrew"></a>Homebrew</h3><p>常用命令：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><span class="line">$ brew list // 安装的软件列表</span><br><span class="line"></span><br><span class="line">$ brew install &lt;name&gt; // 安装某个包</span><br><span class="line"></span><br><span class="line">$ brew uninstall &lt;name&gt; // 卸载安装的软件</span><br><span class="line"></span><br><span class="line">$ brew update // 更新 Homebrew 本身</span><br><span class="line"></span><br><span class="line">$ brew outdated 查看过期软件</span><br><span class="line"></span><br><span class="line">$ brew upgrade &lt;formula&gt; // 更新指定软件</span><br><span class="line"></span><br><span class="line">$ brew pin &lt;formula&gt; 指定某软件保持在当前版本不被更新</span><br><span class="line"></span><br><span class="line">$ brew unpin &lt;formula&gt; 取消某软件保持在当前版本</span><br><span class="line"></span><br><span class="line">$ brew --cache 查看 Homebrew 缓存目录</span><br><span class="line"></span><br><span class="line">// cask 相关</span><br><span class="line"></span><br><span class="line">$ brew install --cask &lt;name&gt; // 使用 cask 安装软件</span><br><span class="line"></span><br><span class="line">$ brew list --cask // 使用 cask 命令安装的应用列表</span><br><span class="line"></span><br><span class="line">$ brew cask uninstall &lt;name&gt; // 卸载使用 cask 命令安装的应用</span><br><span class="line"></span><br><span class="line">$ brew cask search &lt;name&gt; // 查找</span><br></pre></td></tr></table></figure>
+
+<p>避免 Homebrew 自动更新：在 <code>~/.zshrc</code> 文件中写入 <code>export HOMEBREW_NO_AUTO_UPDATE=true</code>。</p>
+<p>安装 <a target="_blank" rel="noopener" href="https://github.com/buo/homebrew-cask-upgrade">homebrew-cask-upgrade</a> 方便 cask 应用更新：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">$ brew tap buo/cask-upgrade // 安装</span><br><span class="line"></span><br><span class="line">$ brew cu -a // 更新所有</span><br><span class="line"></span><br><span class="line">$ brew cu &lt;name&gt; -a 更新指定</span><br></pre></td></tr></table></figure>
+
+<h3 id="node"><a href="#node" class="headerlink" title="node"></a>node</h3><p>常用命令：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">$ npm list // 查看当前目录安装的包</span><br><span class="line"></span><br><span class="line">$ npm list -g --depth 0 // 查看本地全局安装过的包</span><br></pre></td></tr></table></figure>
+
+<p>如果需要多版本的 <code>node</code> 则可以通过 <code>brew install nvm</code> 安装 <code>nvm</code>，之后通过 <code>nvm</code> 安装和管理各版本的 <code>node</code>。</p>
+<h3 id="nvm"><a href="#nvm" class="headerlink" title="nvm"></a>nvm</h3><p>安装流程：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">brew install nvm</span><br></pre></td></tr></table></figure>
+
+<p>在 <code>.zshrc</code> 中写入：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">export NVM_DIR=&quot;$HOME/.nvm&quot;</span><br><span class="line">[ -s &quot;/usr/local/opt/nvm/nvm.sh&quot; ] &amp;&amp; . &quot;/usr/local/opt/nvm/nvm.sh&quot;  # This loads nvm</span><br></pre></td></tr></table></figure>
+
+<p>安装指定版本：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">// 安装 12.16.3</span><br><span class="line">nvm install v12.16.3</span><br></pre></td></tr></table></figure>
+
+<p>查看：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">nvm list</span><br></pre></td></tr></table></figure>
+
+<p>如果安装了多个版本，使用如 <code>nvm use v12.16.3</code> 切换到指定版本（重启终端将恢复默认版本），使用如 <code>nvm alias default v12.16.3</code> 设置默认版本。</p>
+<h3 id="CocoaPods"><a href="#CocoaPods" class="headerlink" title="CocoaPods"></a>CocoaPods</h3><p>安装 <a target="_blank" rel="noopener" href="https://cocoapods.org/">CocoaPods</a>：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ sudo gem install cocoapods</span><br></pre></td></tr></table></figure>
+
+<p>CocoaPods 版本更新：首先使用 <code>$ sudo gem install cocoapods</code> 安装最新版本，之后看哪些被更新了(<code>$ gem list</code>)，再将旧版本卸载掉，比如 <code>$ sudo gem uninstall cocoapods-core -v 1.9.1</code>。</p>
+<p>常用命令：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">pod repo // 查看本地关联了哪些仓库源</span><br><span class="line"></span><br><span class="line">pod repo update // 本地仓库更新</span><br><span class="line"></span><br><span class="line">pod repo update &lt;name&gt; // 更新指定的仓库</span><br></pre></td></tr></table></figure>
+
+<h3 id="Git"><a href="#Git" class="headerlink" title="Git"></a>Git</h3><p>参考个人文章<a href="https://qiweipeng.github.io/2018/04/06/git-ssh-key/">《macOS 下 Git 多账号配置，同时管理多个 SSH Key》</a>配置 SSH Key，主要用在 GitHub。</p>
+<p>参考个人文章<a href="https://qiweipeng.github.io/2018/04/06/gitignore-ds_store/">《如何设置 Git 全局忽略 .DS_Store 文件》</a>配置全局忽略文件。</p>
+<p>参考个人文章<a href="https://qiweipeng.github.io/2018/04/07/some-git-commands/">《记录一些 Git 的命令》</a>对 Git 进行配置，如：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">// 设置全局的用户名和邮箱</span><br><span class="line">$ git config --global user.name &quot;&lt;name&gt;&quot;</span><br><span class="line">$ git config --global user.email &quot;&lt;email address&gt;&quot;</span><br><span class="line"></span><br><span class="line">// 让 Git 输出语句显示颜色</span><br><span class="line">$ git config --global color.ui true</span><br><span class="line"></span><br><span class="line">// 给常用 Git 命令设置别名，以快捷输入，这个依然是保存在家目录的 .gitconfig 文件中</span><br><span class="line">$ git config --global alias.st status</span><br><span class="line">$ git config --global alias.co checkout</span><br><span class="line">$ git config --global alias.ci commit</span><br><span class="line">$ git config --global alias.br branch</span><br><span class="line">$ git config --global alias.unstage &#x27;reset HEAD&#x27;</span><br><span class="line">$ git config --global alias.last &#x27;log -1&#x27;</span><br><span class="line">$ git config --global alias.lg &quot;log --color --graph --pretty=format:&#x27;%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr) %C(bold blue)&lt;%an&gt;%Creset&#x27; --abbrev-commit&quot;</span><br></pre></td></tr></table></figure>
+
+<h3 id="Java"><a href="#Java" class="headerlink" title="Java"></a>Java</h3><p>使用 <code>brew</code> 安装 <code>openjdk</code> 后，需要关注（使用 <code>brew info openjdk</code> 查看）：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">For the system Java wrappers to find this JDK, symlink it with</span><br><span class="line">  sudo ln -sfn /usr/local/opt/openjdk/libexec/openjdk.jdk /Library/Java/JavaVirtualMachines/openjdk.jdk</span><br><span class="line"></span><br><span class="line">openjdk is keg-only, which means it was not symlinked into /usr/local,</span><br><span class="line">because macOS provides similar software and installing this software in</span><br><span class="line">parallel can cause all kinds of trouble.</span><br><span class="line"></span><br><span class="line">If you need to have openjdk first in your PATH, run:</span><br><span class="line">  echo &#x27;export PATH=&quot;/usr/local/opt/openjdk/bin:$PATH&quot;&#x27; &gt;&gt; ~/.zshrc</span><br><span class="line"></span><br><span class="line">For compilers to find openjdk you may need to set:</span><br><span class="line">  export CPPFLAGS=&quot;-I/usr/local/opt/openjdk/include&quot;</span><br></pre></td></tr></table></figure>
+
+<p>同样，安装 <code>openjdk@8</code> 后，需要关注（使用 <code>brew info openjdk@8</code> 查看）：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">For the system Java wrappers to find this JDK, symlink it with</span><br><span class="line">  sudo ln -sfn /usr/local/opt/openjdk@8/libexec/openjdk.jdk /Library/Java/JavaVirtualMachines/openjdk-8.jdk</span><br><span class="line"></span><br><span class="line">openjdk@8 is keg-only, which means it was not symlinked into /usr/local,</span><br><span class="line">because this is an alternate version of another formula.</span><br><span class="line"></span><br><span class="line">If you need to have openjdk@8 first in your PATH, run:</span><br><span class="line">  echo &#x27;export PATH=&quot;/usr/local/opt/openjdk@8/bin:$PATH&quot;&#x27; &gt;&gt; ~/.zshrc</span><br><span class="line"></span><br><span class="line">For compilers to find openjdk@8 you may need to set:</span><br><span class="line">  export CPPFLAGS=&quot;-I/usr/local/opt/openjdk@8/include&quot;</span><br></pre></td></tr></table></figure>
+
+<p>（这是直接安装 Oracle JDK 时的配置，OpenJDK 也可以做类似配置，或直接在需要时更改 <code>.zshrc</code> 文件中两个版本的声明顺序）如果安装了多个版本的 Java，可在 <code>.zshrc</code> 中写入：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"># JDK 8</span><br><span class="line">export JAVA_8_HOME=&quot;/Library/Java/JavaVirtualMachines/jdk1.8.0_271.jdk/Contents/Home&quot;</span><br><span class="line"># JDK 15</span><br><span class="line">export JAVA_15_HOME=&quot;/Library/Java/JavaVirtualMachines/jdk-15.0.1.jdk/Contents/Home&quot;</span><br><span class="line"># 默认JDK 8</span><br><span class="line">export JAVA_HOME=$JAVA_8_HOME</span><br><span class="line"></span><br><span class="line"># alias命令动态切换JDK版本</span><br><span class="line">alias jdk8=&quot;export JAVA_HOME=$JAVA_8_HOME&quot;</span><br><span class="line">alias jdk15=&quot;export JAVA_HOME=$JAVA_15_HOME&quot;</span><br></pre></td></tr></table></figure>
+
+<p>之后可以使用 <code>jdk8</code> 和 <code>jdk15</code> 切换 java 版本。</p>
+<h3 id="Xcode"><a href="#Xcode" class="headerlink" title="Xcode"></a>Xcode</h3><h4 id="配置-GitHub"><a href="#配置-GitHub" class="headerlink" title="配置 GitHub"></a>配置 GitHub</h4><p>登录 GitHub：需要配置 Personal access tokens，命名如 <code>Weipeng&#39;s MacBook Pro - Xcode</code>，打开的权限：</p>
+<ul>
+<li>repo</li>
+<li>admin:org</li>
+<li>admin:public_key</li>
+<li>user</li>
+</ul>
+<h4 id="代码块"><a href="#代码块" class="headerlink" title="代码块"></a>代码块</h4><p>将备份的<a target="_blank" rel="noopener" href="https://github.com/qiweipeng/CodeSnippets">代码块</a>，即 <code>CodeSnippets</code> 文件夹拖入 <code>~/Library/Developer/Xcode/UserData</code> 目录内。</p>
+<h4 id="偏好设置"><a href="#偏好设置" class="headerlink" title="偏好设置"></a>偏好设置</h4><p><code>Preferences</code> 选中 <code>Behaviors</code>，根据 <code>图 - 1</code> 和 <code>图 - 2</code> 进行设置。</p>
+<p><img src="https://raw.githubusercontent.com/qiweipeng/images/master/20201010101100.png"></p>
+<p>图 - 1: Xcode 偏好设置1</p>
+<p><img src="https://raw.githubusercontent.com/qiweipeng/images/master/20201010101109.png"></p>
+<p>图 - 2: Xcode 偏好设置2</p>
+<h4 id="命令行快捷键"><a href="#命令行快捷键" class="headerlink" title="命令行快捷键"></a>命令行快捷键</h4><p>创建文件 <code>open_terminal.sh</code>，写入代码：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">#!/bin/sh</span><br><span class="line">if [ -n &quot;$XcodeProjectPath&quot; ]; then</span><br><span class="line">    open -a iTerm &quot;$XcodeProjectPath&quot;/..</span><br><span class="line">else</span><br><span class="line">    open -a iTerm &quot;$XcodeWorkspacePath&quot;/..</span><br><span class="line">fi</span><br></pre></td></tr></table></figure>
+
+<p>之后将脚本保存 <code>~/Local/Scripts/</code> 目录下，然后在该目录下执行 <code>chmod +x open_terminal.sh</code> 将脚步设为可执行。</p>
+<p>打开 Xcode 的 <code>Preferences</code>，选中 <code>Behaviors</code>，新建并命名为 <code>Open Terminal</code>，快捷键设置为 <code>Control + Command + /</code>，路径选择脚本所在路径。</p>
+<p><img src="https://raw.githubusercontent.com/qiweipeng/images/master/20201009190201.png"></p>
+<p>图 - 3: 打开命令行脚本设置</p>
+<h3 id="Visual-Studio-Code"><a href="#Visual-Studio-Code" class="headerlink" title="Visual Studio Code"></a>Visual Studio Code</h3><p><code>Shift + Command + P</code> 之后找到 <code>Shell Command: Install &quot;code&quot; command in PATH</code>，运行。</p>
+<p>登录同步账号：<code>qiweipeng@hotmail.com</code>，登录 Github。</p>
+<h3 id="PicGo"><a href="#PicGo" class="headerlink" title="PicGo"></a>PicGo</h3><p>打开[上传前重命名]和[时间戳重命名]。</p>
+<p>GitHub 图床设置：</p>
+<p><img src="https://raw.githubusercontent.com/qiweipeng/images/master/20201009192119.png"></p>
+<p>图 - 4: PicGo 中 GitHub 图床设置</p>
+<p>其中需要配置 Personal access tokens，命名如 <code>Weipeng&#39;s MacBook Pro - PicGo</code>，打开的权限：</p>
+<ul>
+<li>repo</li>
+</ul>
+<h3 id="Trojan"><a href="#Trojan" class="headerlink" title="Trojan"></a>Trojan</h3><p>User Rules 配置：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">||notion.so</span><br><span class="line">||*.notion.so</span><br><span class="line">||github.com</span><br><span class="line">||*.github.com</span><br><span class="line">||githubusercontent.com</span><br><span class="line">||*.githubusercontent.com</span><br><span class="line">||dribbble.com</span><br><span class="line">||*.dribbble.com</span><br></pre></td></tr></table></figure>
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/%E8%AE%A1%E7%AE%97%E6%9C%BA/" rel="tag"># 计算机</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2020/06/22/objc-style-guide/" rel="prev" title="Objective-C 代码规范">
+      <i class="fa fa-chevron-left"></i> Objective-C 代码规范
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/2020/10/10/hexo-deployment/" rel="next" title="如何部署 Hexo 博客">
+      如何部署 Hexo 博客 <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E8%BD%AF%E4%BB%B6%E5%AE%89%E8%A3%85"><span class="nav-number">1.</span> <span class="nav-text">软件安装</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#App-Store"><span class="nav-number">1.1.</span> <span class="nav-text">App Store</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Homebrew"><span class="nav-number">1.2.</span> <span class="nav-text">Homebrew</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%89%8B%E5%8A%A8%E5%AE%89%E8%A3%85"><span class="nav-number">1.3.</span> <span class="nav-text">手动安装</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E9%85%8D%E7%BD%AE%E5%92%8C%E7%BB%B4%E6%8A%A4"><span class="nav-number">2.</span> <span class="nav-text">配置和维护</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E9%9C%80%E8%A6%81%E6%BF%80%E6%B4%BB%E7%9A%84-App"><span class="nav-number">2.1.</span> <span class="nav-text">需要激活的 App</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%B3%BB%E7%BB%9F%E9%85%8D%E7%BD%AE"><span class="nav-number">2.2.</span> <span class="nav-text">系统配置</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#System-Preferences"><span class="nav-number">2.2.1.</span> <span class="nav-text">System Preferences</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Finder"><span class="nav-number">2.2.2.</span> <span class="nav-text">Finder</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Safari"><span class="nav-number">2.2.3.</span> <span class="nav-text">Safari</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%85%B6%E5%AE%83"><span class="nav-number">2.2.4.</span> <span class="nav-text">其它</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Homebrew-1"><span class="nav-number">2.3.</span> <span class="nav-text">Homebrew</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#node"><span class="nav-number">2.4.</span> <span class="nav-text">node</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#nvm"><span class="nav-number">2.5.</span> <span class="nav-text">nvm</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#CocoaPods"><span class="nav-number">2.6.</span> <span class="nav-text">CocoaPods</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Git"><span class="nav-number">2.7.</span> <span class="nav-text">Git</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Java"><span class="nav-number">2.8.</span> <span class="nav-text">Java</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Xcode"><span class="nav-number">2.9.</span> <span class="nav-text">Xcode</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E9%85%8D%E7%BD%AE-GitHub"><span class="nav-number">2.9.1.</span> <span class="nav-text">配置 GitHub</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E4%BB%A3%E7%A0%81%E5%9D%97"><span class="nav-number">2.9.2.</span> <span class="nav-text">代码块</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%81%8F%E5%A5%BD%E8%AE%BE%E7%BD%AE"><span class="nav-number">2.9.3.</span> <span class="nav-text">偏好设置</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%91%BD%E4%BB%A4%E8%A1%8C%E5%BF%AB%E6%8D%B7%E9%94%AE"><span class="nav-number">2.9.4.</span> <span class="nav-text">命令行快捷键</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Visual-Studio-Code"><span class="nav-number">2.10.</span> <span class="nav-text">Visual Studio Code</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#PicGo"><span class="nav-number">2.11.</span> <span class="nav-text">PicGo</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Trojan"><span class="nav-number">2.12.</span> <span class="nav-text">Trojan</span></a></li></ol></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <p class="site-author-name" itemprop="name">齐卫鹏</p>
+  <div class="site-description" itemprop="description"></div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">44</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-tags">
+        <span class="site-state-item-count">13</span>
+        <span class="site-state-item-name">标签</span>
+      </div>
+  </nav>
+</div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2024</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">齐卫鹏</span>
+</div>
+  <div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://muse.theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Muse</a> 强力驱动
+  </div>
+
+        
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/muse.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+</body>
+</html>

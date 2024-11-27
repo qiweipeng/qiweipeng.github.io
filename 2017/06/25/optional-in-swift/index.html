@@ -1,0 +1,440 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 7.3.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"qiweipeng.github.io","root":"/","scheme":"Muse","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
+  </script>
+
+  <meta name="description" content="通常在其他语言中，nil 的本质就是 0，用 0 代表没有；但是 Swift 认为，0 应该是和其他整数一样的呀？程序员怎么知道 0 就是没有而不是 0 本身呢？于是，在 Swift 中出现了可选型的概念。在 Swift 中，nil 代表空，代表没有，nil 就是 nil，不再是一个整数 0 了。 可选型的基本使用可选型写法很简单，普通类型后面加 ? 就可以了；通常一个变量如果不应该为空，一定要存">
+<meta property="og:type" content="article">
+<meta property="og:title" content="详解可选型（Optional）">
+<meta property="og:url" content="https://qiweipeng.github.io/2017/06/25/optional-in-swift/index.html">
+<meta property="og:site_name" content="齐卫鹏的博客">
+<meta property="og:description" content="通常在其他语言中，nil 的本质就是 0，用 0 代表没有；但是 Swift 认为，0 应该是和其他整数一样的呀？程序员怎么知道 0 就是没有而不是 0 本身呢？于是，在 Swift 中出现了可选型的概念。在 Swift 中，nil 代表空，代表没有，nil 就是 nil，不再是一个整数 0 了。 可选型的基本使用可选型写法很简单，普通类型后面加 ? 就可以了；通常一个变量如果不应该为空，一定要存">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2017-06-25T14:51:50.000Z">
+<meta property="article:modified_time" content="2024-11-26T07:58:51.055Z">
+<meta property="article:author" content="齐卫鹏">
+<meta property="article:tag" content="Swift">
+<meta name="twitter:card" content="summary">
+
+<link rel="canonical" href="https://qiweipeng.github.io/2017/06/25/optional-in-swift/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'zh-CN'
+  };
+</script>
+
+  <title>详解可选型（Optional） | 齐卫鹏的博客</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">齐卫鹏的博客</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+      <p class="site-subtitle" itemprop="description">欢迎</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a>
+
+  </li>
+  </ul>
+</nav>
+
+
+
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://qiweipeng.github.io/2017/06/25/optional-in-swift/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="齐卫鹏">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="齐卫鹏的博客">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          详解可选型（Optional）
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2017-06-25 22:51:50" itemprop="dateCreated datePublished" datetime="2017-06-25T22:51:50+08:00">2017-06-25</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2024-11-26 15:58:51" itemprop="dateModified" datetime="2024-11-26T15:58:51+08:00">2024-11-26</time>
+              </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <p>通常在其他语言中，nil 的本质就是 0，用 0 代表没有；但是 Swift 认为，0 应该是和其他整数一样的呀？程序员怎么知道 0 就是没有而不是 0 本身呢？于是，在 Swift 中出现了可选型的概念。在 Swift 中，nil 代表空，代表没有，nil 就是 nil，不再是一个整数 0 了。</p>
+<h2 id="可选型的基本使用"><a href="#可选型的基本使用" class="headerlink" title="可选型的基本使用"></a>可选型的基本使用</h2><p>可选型写法很简单，普通类型后面加 <code>?</code> 就可以了；通常一个变量如果不应该为空，一定要存在，那么就不应该设置为可选型，比如身份证号，每个人都一定有，那么就不要设置成可选型</p>
+<figure class="highlight swift"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">let</span> id: <span class="type">Int</span></span><br></pre></td></tr></table></figure>
+
+<p>如果这个变量可以为空，比如错误信息，错误信息可能有也可能没有，那么就适合设置成可选型</p>
+<figure class="highlight swift"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> errorMessage: <span class="type">String</span>?</span><br></pre></td></tr></table></figure>
+
+<p>可选型的使用必须经过一个步骤就是解包（Unwrapp），<strong>可选型是无法直接使用的</strong>。</p>
+<p>最简单的解包方式就是强制解包，含义为程序员保证这个可选型变量&#x2F;常量一定不会空；而如果其真的为空了就会崩溃，因此这是有风险的，程序员必须能保证才行。</p>
+<figure class="highlight swift"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> serverResponseCode: <span class="type">Int</span>? <span class="operator">=</span> <span class="number">404</span></span><br><span class="line"></span><br><span class="line"><span class="comment">// serverResponseCode = nil // 如果加上这句代码，强制解包失败就会崩溃</span></span><br><span class="line"><span class="comment">// 另外，只有可选型可以设置成 nil，非可选型是无法设置为 nil 的</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">let</span> code <span class="operator">=</span> serverResponseC！ <span class="comment">// 此时 code 为 Int 类型</span></span><br></pre></td></tr></table></figure>
+
+<p>通常情况下，比如网络请求得到的数据，我们无法保证其一定不会 nil，此时就应该通过判断来非暴力的解包，我们通常能想到的应该是下面这样</p>
+<figure class="highlight swift"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">if</span> serverResponseCode <span class="operator">!=</span> <span class="literal">nil</span> &#123;</span><br><span class="line">   <span class="keyword">let</span> code <span class="operator">=</span> serverResponseCode<span class="operator">!</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>事实上，因为可选型解包是一个常用操作，Swift 为我们专门提供了简化语法，下面的语法和上面的完全等价</p>
+<figure class="highlight swift"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">if</span> <span class="keyword">let</span> severResponseCode <span class="operator">=</span> serverResponseCode &#123;</span><br><span class="line">    <span class="comment">// 此时，大括号内的 severResponseCode 就变成了一个 Int 类型，可以直接使用</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>如果有多个可选型同时需要解包，那么它们可以并列写在同一个 if 语句里</p>
+<figure class="highlight swift"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> serverResponseCode: <span class="type">Int</span>? <span class="operator">=</span> <span class="number">404</span></span><br><span class="line"><span class="keyword">var</span> serverResponseMessage: <span class="type">String</span>? <span class="operator">=</span> <span class="string">&quot;not found&quot;</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span> <span class="keyword">let</span> severResponseCode <span class="operator">=</span> serverResponseCode, <span class="keyword">let</span> serverResponseMessage <span class="operator">=</span> serverResponseMessage &#123;</span><br><span class="line">    <span class="comment">// 这个作用域内，解包后的变量可以直接使用</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>当然，可以使用 if 的一般都可以使用 guard，本文就不涉及 guard 的使用了。</p>
+<p>可见可选型的基本使用并不难，可为空就设置成可选型，用的时候就需要解包，这样就可以了。那么，Swfit 为什么要给程序员添加这个麻烦呢？当然是为了安全啦，可以这么说，只要程序员合理使用可选型，原来在 Objective-C 中的野指针访问的问题基本就可以避免啦。Swift 只是强制程序员去主动思考了而已，原来是被动的，现在是把这个过程提前到代码编写阶段，不得不去考虑。</p>
+<h2 id="可选型的实质"><a href="#可选型的实质" class="headerlink" title="可选型的实质"></a>可选型的实质</h2><p>可选型事实上是一个枚举，<code>String?</code> 实际上是 <code>Optional&lt;String&gt;</code>，它只是一个语法糖。下面两句代码是完全等价的</p>
+<figure class="highlight swift"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> optionalString: <span class="type">String</span>? <span class="operator">=</span> <span class="string">&quot;Hello&quot;</span></span><br><span class="line"><span class="keyword">var</span> optionalString: <span class="type">Optional</span>&lt;<span class="type">String</span>&gt; <span class="operator">=</span> <span class="type">Optional</span>.some(<span class="string">&quot;Hello&quot;</span>)</span><br></pre></td></tr></table></figure>
+
+<p>而通常我们的解包</p>
+<figure class="highlight swift"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">if</span> <span class="keyword">let</span> aString <span class="operator">=</span> optionalString &#123;</span><br><span class="line">    aString <span class="comment">// 解包</span></span><br><span class="line">&#125; <span class="keyword">else</span> &#123;</span><br><span class="line">    <span class="built_in">print</span>(<span class="string">&quot;nil&quot;</span>)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>其实也可以看作下面的过程</p>
+<figure class="highlight swift"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">switch</span> optionalString &#123;</span><br><span class="line"><span class="keyword">case</span> <span class="keyword">let</span> .some(alString):</span><br><span class="line">    alString <span class="comment">// 这里就是解包后的 String 类型变量</span></span><br><span class="line"><span class="keyword">case</span> .none:</span><br><span class="line">    <span class="built_in">print</span>(<span class="string">&quot;none&quot;</span>) <span class="comment">// 这就是解包失败</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>我们可以尝试自己写一个这样的枚举</p>
+<figure class="highlight swift"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">enum</span> <span class="title class_">MyOptional</span>&lt;<span class="type">T</span>&gt; &#123;</span><br><span class="line">    <span class="keyword">case</span> <span class="keyword">some</span>(<span class="type">T</span>)</span><br><span class="line">    <span class="keyword">case</span> none</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">let</span> optionaString <span class="operator">=</span> <span class="type">MyOptional</span>.some(<span class="string">&quot;Hello&quot;</span>) <span class="comment">// 这里类型是通过类型推断得到的，当然也可以显式声明其类型 MyOptional&lt;String&gt;</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">switch</span> optionaString &#123;</span><br><span class="line"><span class="keyword">case</span> <span class="keyword">let</span> .some(aString):</span><br><span class="line">    <span class="built_in">print</span>(aString) <span class="comment">// 这里就相当于解包成功咯</span></span><br><span class="line"><span class="keyword">case</span> .none:</span><br><span class="line">    <span class="built_in">print</span>(<span class="string">&quot;none&quot;</span>) <span class="comment">// 这里就是解包失败，也就是 nil</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h2 id="Optional-Chaining"><a href="#Optional-Chaining" class="headerlink" title="Optional Chaining"></a>Optional Chaining</h2><p>我们知道可选型无法直接使用，那么我们就要先解包，然后使用，如果调用一个方法后返回类型还是可选型呢？那么我们再解包，再使用。那这样也太麻烦了吧？</p>
+<p>所以呢，Swift 的这样一个语法就是解决这样的问题的，那就是 Optional Chaining，它的语法大约是下面这样的</p>
+<figure class="highlight swift"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">let</span> aString: <span class="type">String</span>? <span class="operator">=</span> <span class="string">&quot;Hello world&quot;</span></span><br><span class="line"><span class="keyword">let</span> des <span class="operator">=</span> aString<span class="operator">?</span>.first<span class="operator">?</span>.description</span><br></pre></td></tr></table></figure>
+
+<p>一个可选型可以直接调用它对应的非可选型的方法，只不过返回值同样变成了一个可选型而已（即使这个方法的返回类型是一个非可选型），我们知道 description 的返回类型是 String 类型，可是此时 des 的类型是 String？</p>
+<h2 id="隐式可选型"><a href="#隐式可选型" class="headerlink" title="隐式可选型"></a>隐式可选型</h2><p>在 UIKit 中，有很多类型是如 <code>UIView!</code> 这样的，比如 UIViewController 中的 view 属性，这就是隐式可选型。</p>
+<p>隐式可选型是什么呢？其实也是一个可选型，也就是说 <code>Int!</code> 和 <code>Int?</code>  都是可选型，都可以为 nil；那么区别在哪呢？区别很小，就是 <code>Int!</code> 可以省去解包这个步骤直接使用</p>
+<figure class="highlight swift"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">let</span> num: <span class="type">Int</span>! <span class="operator">=</span> <span class="number">3</span></span><br><span class="line"><span class="keyword">let</span> sum <span class="operator">=</span> num <span class="operator">+</span> <span class="number">4</span></span><br></pre></td></tr></table></figure>
+
+<p>所以很简单，<code>Int!</code> 就是把强制解包的步骤给提前做啦，其他跟一般的可选型没啥区别；当然，这样肯定是有风险的，因为是强制解包嘛。所以程序员声明隐式可选型闭包保证一点，就是在真正使用它的时候，其必须不为 nil。</p>
+<p>那隐式可选型有什么作用呢？目前来讲，其应用场景基本就是在定义类的时候，类的某些属性我们可以定义成隐式可选型。下面这个例子来自慕课网刘宇波老师的案例</p>
+<figure class="highlight swift"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">City</span> &#123;</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">let</span> cityName: <span class="type">String</span></span><br><span class="line">    <span class="keyword">unowned</span> <span class="keyword">var</span> country: <span class="type">Country</span></span><br><span class="line">    </span><br><span class="line">    <span class="keyword">init</span>(<span class="params">cityName</span>: <span class="type">String</span>, <span class="params">country</span>: <span class="type">Country</span>) &#123;</span><br><span class="line">        <span class="keyword">self</span>.cityName <span class="operator">=</span> cityName</span><br><span class="line">        <span class="keyword">self</span>.country <span class="operator">=</span> country</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">Country</span> &#123;</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">let</span> countryName: <span class="type">String</span></span><br><span class="line">    <span class="comment">// 这里如果不使用可选型,因为类的所有成员变量还没有被全部赋值,下面就无法在构造函数中使用 self,但是程序员又可以保证这个类的对象一旦创建,这个属性一定不为nil,所以这里使用了隐式可选型</span></span><br><span class="line">    <span class="keyword">var</span> capitalCity: <span class="type">City</span>!</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">init</span>(<span class="params">countryName</span>: <span class="type">String</span>, <span class="params">capitalCity</span>: <span class="type">String</span>) &#123;</span><br><span class="line">        <span class="keyword">self</span>.countryName <span class="operator">=</span> countryName</span><br><span class="line">        <span class="keyword">self</span>.capitalCity <span class="operator">=</span> <span class="type">City</span>(cityName: capitalCity, country: <span class="keyword">self</span>)</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>这个例子中， <code>Country</code> 类中的 <code>capitalCity</code> 属性被定义成了隐式可选型。</p>
+<p>首先，为什么不能定义成一般的可选型呢？因为一个国家的首都都是确定存在的不可能为空啊，程序员其实不想把它定义成可选型，更不希望用户使用的时候还要解包。</p>
+<p>那么就定义成非可选型呗？也不行，因为在构造函数里，我们在给 <code>self.capitalCity</code> 赋值的时候使用了 <code>self</code>，我们知道一个类的对象在构造完成前（因为 self.capitalCity 属性没有被赋值嘛）是不可以被使用的，那这怎么办呢？既然要用这个对象就要赋值，既然要赋值就要用这个对象，死循环了。</p>
+<p>所以解决办法就是在赋值之前就让这个对象先构造完成，也就是把这个属性改成可选型，这样可选型可以不用初始化（默认为 nil），之后呢我们马上再给这个对象的这个属性赋上值，最终在用户使用这个对象的时候，这个属性可以保证不为 nil，同时用户也不用解包即可直接使用了。</p>
+
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/Swift/" rel="tag"># Swift</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2017/06/12/swift-security-tips/" rel="prev" title="从一些细节谈谈为什么说 Swift 是一门更安全的语言">
+      <i class="fa fa-chevron-left"></i> 从一些细节谈谈为什么说 Swift 是一门更安全的语言
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/2017/07/23/function-in-swift/" rel="next" title="Swift 函数式编程入门">
+      Swift 函数式编程入门 <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%8F%AF%E9%80%89%E5%9E%8B%E7%9A%84%E5%9F%BA%E6%9C%AC%E4%BD%BF%E7%94%A8"><span class="nav-number">1.</span> <span class="nav-text">可选型的基本使用</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%8F%AF%E9%80%89%E5%9E%8B%E7%9A%84%E5%AE%9E%E8%B4%A8"><span class="nav-number">2.</span> <span class="nav-text">可选型的实质</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Optional-Chaining"><span class="nav-number">3.</span> <span class="nav-text">Optional Chaining</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E9%9A%90%E5%BC%8F%E5%8F%AF%E9%80%89%E5%9E%8B"><span class="nav-number">4.</span> <span class="nav-text">隐式可选型</span></a></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <p class="site-author-name" itemprop="name">齐卫鹏</p>
+  <div class="site-description" itemprop="description"></div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">44</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-tags">
+        <span class="site-state-item-count">13</span>
+        <span class="site-state-item-name">标签</span>
+      </div>
+  </nav>
+</div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2024</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">齐卫鹏</span>
+</div>
+  <div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://muse.theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Muse</a> 强力驱动
+  </div>
+
+        
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/muse.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+</body>
+</html>

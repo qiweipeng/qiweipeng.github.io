@@ -1,0 +1,410 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 7.3.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"qiweipeng.github.io","root":"/","scheme":"Muse","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
+  </script>
+
+  <meta name="description" content="学习 Swift 的过程中，发现这门新语言在设计上确实融入了很多思考，Swift 宣称相对 Objective-C 是一门更安全的语言，那么本文就从语法设计上，举几个小例子谈谈 Swift 为了安全都做了哪些努力。 Swift 中不允许溢出错误在 Objective-C 中，如下代码会警告但是可以编译通过，打印结果为 -128，理解进制的就会知道，因为发生了溢出（int8_t 只能保存 -128">
+<meta property="og:type" content="article">
+<meta property="og:title" content="从一些细节谈谈为什么说 Swift 是一门更安全的语言">
+<meta property="og:url" content="https://qiweipeng.github.io/2017/06/12/swift-security-tips/index.html">
+<meta property="og:site_name" content="齐卫鹏的博客">
+<meta property="og:description" content="学习 Swift 的过程中，发现这门新语言在设计上确实融入了很多思考，Swift 宣称相对 Objective-C 是一门更安全的语言，那么本文就从语法设计上，举几个小例子谈谈 Swift 为了安全都做了哪些努力。 Swift 中不允许溢出错误在 Objective-C 中，如下代码会警告但是可以编译通过，打印结果为 -128，理解进制的就会知道，因为发生了溢出（int8_t 只能保存 -128">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2017-06-12T12:03:46.000Z">
+<meta property="article:modified_time" content="2024-11-26T07:58:51.057Z">
+<meta property="article:author" content="齐卫鹏">
+<meta property="article:tag" content="Swift">
+<meta name="twitter:card" content="summary">
+
+<link rel="canonical" href="https://qiweipeng.github.io/2017/06/12/swift-security-tips/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'zh-CN'
+  };
+</script>
+
+  <title>从一些细节谈谈为什么说 Swift 是一门更安全的语言 | 齐卫鹏的博客</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">齐卫鹏的博客</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+      <p class="site-subtitle" itemprop="description">欢迎</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a>
+
+  </li>
+  </ul>
+</nav>
+
+
+
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://qiweipeng.github.io/2017/06/12/swift-security-tips/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="齐卫鹏">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="齐卫鹏的博客">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          从一些细节谈谈为什么说 Swift 是一门更安全的语言
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2017-06-12 20:03:46" itemprop="dateCreated datePublished" datetime="2017-06-12T20:03:46+08:00">2017-06-12</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2024-11-26 15:58:51" itemprop="dateModified" datetime="2024-11-26T15:58:51+08:00">2024-11-26</time>
+              </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <p>学习 Swift 的过程中，发现这门新语言在设计上确实融入了很多思考，Swift 宣称相对 Objective-C 是一门更安全的语言，那么本文就从语法设计上，举几个小例子谈谈 Swift 为了安全都做了哪些努力。</p>
+<h2 id="Swift-中不允许溢出错误"><a href="#Swift-中不允许溢出错误" class="headerlink" title="Swift 中不允许溢出错误"></a>Swift 中不允许溢出错误</h2><p>在 Objective-C 中，如下代码会警告但是可以编译通过，打印结果为 -128，理解进制的就会知道，因为发生了溢出（int8_t 只能保存 -128 到 127 的整数），127 在二进制层面加 1 的结果就是 -128。</p>
+<figure class="highlight objc"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">int8_t aInt8 = <span class="number">128</span>;</span><br><span class="line"><span class="built_in">NSLog</span>(<span class="string">@&quot;%d&quot;</span>, aInt8); <span class="comment">// -128</span></span><br></pre></td></tr></table></figure>
+
+<p>溢出在 C 语言以及 Objective-C 中都是被允许的，但是潜在的 Bug 也会因此产生，大部分开发中我们其实更希望这种情况被及时提醒而不是编译通过，最终给我们一个莫名其妙的值。这种 Bug 往往也难以寻找。</p>
+<p>而在 Swift 中，溢出是在语法检查的时候就无法编译通过的，如下面代码：</p>
+<figure class="highlight swift"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">let</span> aInt8: <span class="type">Int8</span> <span class="operator">=</span> <span class="number">128</span> <span class="comment">// 错误信息：Integer literal &#x27;128&#x27; overflows when stored into &#x27;Int8&#x27;</span></span><br></pre></td></tr></table></figure>
+
+<h2 id="Swift-不提供隐式的类型转换"><a href="#Swift-不提供隐式的类型转换" class="headerlink" title="Swift 不提供隐式的类型转换"></a>Swift 不提供隐式的类型转换</h2><p>与 Objective-C 不同，Swift 是一门强类型语言，我们甚至无法给一个整型变量赋值一个小数，更别说像 Objective-C 那样任意指针指向任意对象了。但是我们不必在所有情况下显式声明变量类型，是因为 Swift 为我们提供了 <code>类型推断（Type Inference）</code>，如下面代码：</p>
+<figure class="highlight swift"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">let</span> aDouble <span class="operator">=</span> <span class="number">1.5</span> <span class="comment">// 类型推断为 Double 类型</span></span><br></pre></td></tr></table></figure>
+
+<p>但是在类型转换上，Swift 要求极为严格，一个 Int 类型绝对是无法和一个 Double 类型相加的，必须显式地类型转换：</p>
+<figure class="highlight swift"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">let</span> x: <span class="type">Double</span> <span class="operator">=</span> <span class="number">1.2</span></span><br><span class="line"><span class="keyword">let</span> y: <span class="type">Int</span> <span class="operator">=</span> <span class="number">5</span></span><br><span class="line"></span><br><span class="line"><span class="comment">// 必须显式进行类型转换,避免潜在 Bug 出现</span></span><br><span class="line"><span class="keyword">let</span> sum <span class="operator">=</span> <span class="type">Int</span>(x) <span class="operator">+</span> y</span><br></pre></td></tr></table></figure>
+
+<h2 id="赋值运算取消返回值"><a href="#赋值运算取消返回值" class="headerlink" title="赋值运算取消返回值"></a>赋值运算取消返回值</h2><p>我们看下面代码：</p>
+<figure class="highlight objc"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">NSString</span> *aString = <span class="literal">nil</span>;</span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span> (aString == <span class="literal">nil</span>) &#123;</span><br><span class="line">    <span class="built_in">NSLog</span>(<span class="string">@&quot;aString is nil.&quot;</span>); <span class="comment">// 打印 aString is nil.</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>这段代码本身没有意义，目的在于说明一个程序员可能发生的错误，这就是不小心把 <code>==</code> 写成了 <code>=</code>，结果会截然不同，但是 Bug 同样难以寻找。因此在有的 Objective-C 代码规范中会有这样的规定，建议上面代码中的 condition 部分写成 <code>nil == aString</code> 以避免类似 Bug 的发生。</p>
+<p>而在 Swift 中，首先是没有非 0 即真的概念的（Swift 认为，0 应该是和其他整数一样的，不应该用它来表示空，因此发明了可选型），其次，赋值运算是没有返回值的，这样把它放在 if 语句中就直接会报错。</p>
+<h2 id="for-in、if-else、switch-等语句中的大括号不可省略"><a href="#for-in、if-else、switch-等语句中的大括号不可省略" class="headerlink" title="for-in、if-else、switch 等语句中的大括号不可省略"></a>for-in、if-else、switch 等语句中的大括号不可省略</h2><p>记得听过一个故事，苹果的一位程序员因为 if 语句只有一句代码所以没有加大括号，后期添加代码时仍然忘记添加，因此导致 Bug。Swift 中所有这些语句均必须添加大括号。</p>
+<h2 id="结尾"><a href="#结尾" class="headerlink" title="结尾"></a>结尾</h2><p>本文只是从一些小细节入手去谈 Swift 的安全性，其更多地安全性的表现应该是<code>强类型</code>、<code>可选型</code>等等，这些内容值得单独去讲，之后会专门写文章去理解相关的概念。</p>
+
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/Swift/" rel="tag"># Swift</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2017/03/14/access-control-in-swift/" rel="prev" title="关于 private, fileprivate, internal, public, open 关键字的用法">
+      <i class="fa fa-chevron-left"></i> 关于 private, fileprivate, internal, public, open 关键字的用法
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/2017/06/25/optional-in-swift/" rel="next" title="详解可选型（Optional）">
+      详解可选型（Optional） <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#Swift-%E4%B8%AD%E4%B8%8D%E5%85%81%E8%AE%B8%E6%BA%A2%E5%87%BA%E9%94%99%E8%AF%AF"><span class="nav-number">1.</span> <span class="nav-text">Swift 中不允许溢出错误</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Swift-%E4%B8%8D%E6%8F%90%E4%BE%9B%E9%9A%90%E5%BC%8F%E7%9A%84%E7%B1%BB%E5%9E%8B%E8%BD%AC%E6%8D%A2"><span class="nav-number">2.</span> <span class="nav-text">Swift 不提供隐式的类型转换</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E8%B5%8B%E5%80%BC%E8%BF%90%E7%AE%97%E5%8F%96%E6%B6%88%E8%BF%94%E5%9B%9E%E5%80%BC"><span class="nav-number">3.</span> <span class="nav-text">赋值运算取消返回值</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#for-in%E3%80%81if-else%E3%80%81switch-%E7%AD%89%E8%AF%AD%E5%8F%A5%E4%B8%AD%E7%9A%84%E5%A4%A7%E6%8B%AC%E5%8F%B7%E4%B8%8D%E5%8F%AF%E7%9C%81%E7%95%A5"><span class="nav-number">4.</span> <span class="nav-text">for-in、if-else、switch 等语句中的大括号不可省略</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%BB%93%E5%B0%BE"><span class="nav-number">5.</span> <span class="nav-text">结尾</span></a></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <p class="site-author-name" itemprop="name">齐卫鹏</p>
+  <div class="site-description" itemprop="description"></div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">44</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-tags">
+        <span class="site-state-item-count">13</span>
+        <span class="site-state-item-name">标签</span>
+      </div>
+  </nav>
+</div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2024</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">齐卫鹏</span>
+</div>
+  <div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://muse.theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Muse</a> 强力驱动
+  </div>
+
+        
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/muse.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+</body>
+</html>

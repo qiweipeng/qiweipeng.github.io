@@ -1,0 +1,423 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 7.3.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"qiweipeng.github.io","root":"/","scheme":"Muse","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
+  </script>
+
+  <meta name="description" content="一个 App 与文件系统的交互完全限制在 app&#39;s sandbox directory 中，具体目录结构如下。注意沙盒并不是 Data Container 而是包括 Bundle Container 等一系列目录，这些目录将一个 App 限制在一定的范围内。  图 1 - 沙盒目录 常用目录解释Bundle ContainerBundle Container 下就是 App 本身。 AP">
+<meta property="og:type" content="article">
+<meta property="og:title" content="iOS 沙盒路径分析">
+<meta property="og:url" content="https://qiweipeng.github.io/2016/11/10/ios-sandbox-directory/index.html">
+<meta property="og:site_name" content="齐卫鹏的博客">
+<meta property="og:description" content="一个 App 与文件系统的交互完全限制在 app&#39;s sandbox directory 中，具体目录结构如下。注意沙盒并不是 Data Container 而是包括 Bundle Container 等一系列目录，这些目录将一个 App 限制在一定的范围内。  图 1 - 沙盒目录 常用目录解释Bundle ContainerBundle Container 下就是 App 本身。 AP">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://raw.githubusercontent.com/qiweipeng/images/master/20200930175547.png">
+<meta property="og:image" content="https://raw.githubusercontent.com/qiweipeng/images/master/20200930182652.png">
+<meta property="article:published_time" content="2016-11-10T12:10:12.000Z">
+<meta property="article:modified_time" content="2024-11-26T07:58:51.052Z">
+<meta property="article:author" content="齐卫鹏">
+<meta property="article:tag" content="iOS">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://raw.githubusercontent.com/qiweipeng/images/master/20200930175547.png">
+
+<link rel="canonical" href="https://qiweipeng.github.io/2016/11/10/ios-sandbox-directory/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'zh-CN'
+  };
+</script>
+
+  <title>iOS 沙盒路径分析 | 齐卫鹏的博客</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">齐卫鹏的博客</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+      <p class="site-subtitle" itemprop="description">欢迎</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a>
+
+  </li>
+  </ul>
+</nav>
+
+
+
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://qiweipeng.github.io/2016/11/10/ios-sandbox-directory/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="齐卫鹏">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="齐卫鹏的博客">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          iOS 沙盒路径分析
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2016-11-10 20:10:12" itemprop="dateCreated datePublished" datetime="2016-11-10T20:10:12+08:00">2016-11-10</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2024-11-26 15:58:51" itemprop="dateModified" datetime="2024-11-26T15:58:51+08:00">2024-11-26</time>
+              </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <p>一个 App 与文件系统的交互完全限制在 <code>app&#39;s sandbox directory</code> 中，具体目录结构如下。注意沙盒并不是 <code>Data Container</code> 而是包括 <code>Bundle Container</code> 等一系列目录，这些目录将一个 App 限制在一定的范围内。</p>
+<p><img src="https://raw.githubusercontent.com/qiweipeng/images/master/20200930175547.png"></p>
+<p>图 1 - 沙盒目录</p>
+<h2 id="常用目录解释"><a href="#常用目录解释" class="headerlink" title="常用目录解释"></a>常用目录解释</h2><h3 id="Bundle-Container"><a href="#Bundle-Container" class="headerlink" title="Bundle Container"></a>Bundle Container</h3><p>Bundle Container 下就是 App 本身。</p>
+<h4 id="APPName-app"><a href="#APPName-app" class="headerlink" title="APPName.app"></a>APPName.app</h4><p>模拟器下的目录：</p>
+<figure class="highlight objc"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">/Users/qiweipeng/Library/Developer/CoreSimulator/Devices/<span class="number">1679</span>AE2F<span class="number">-140</span>F<span class="number">-400</span>A-B21E-DF9A94CE842E/data/Containers/Bundle/Application/<span class="number">76</span>D971A9<span class="number">-3397</span><span class="number">-4814</span>-A043<span class="number">-80</span>EA68438B78/Demo.app</span><br></pre></td></tr></table></figure>
+
+<p>其中，<code>Demo.app</code> 上一级目录，即 <code>76D971A9-3397-4814-A043-80EA68438B78</code> 每次 App 运行都会改变（具体可以观察那个文件夹，每次 <code>command + R</code> 的时候，那个文件夹名就会变一下），这是为了安全考虑。</p>
+<p>这个目录包含应用和它的所有资源，<strong>只可以读取</strong>，无法修改和写入。<strong>不会被备份</strong>。</p>
+<h3 id="Data-Container"><a href="#Data-Container" class="headerlink" title="Data Container"></a>Data Container</h3><p><img src="https://raw.githubusercontent.com/qiweipeng/images/master/20200930182652.png"></p>
+<p>图 2 - 模拟器下的 Data Container</p>
+<p>这些目录中：</p>
+<ul>
+<li>Documents 文件夹和 Library 文件夹（但是除了 Caches 文件夹）会被 iTunes 或者 iCloud 备份；</li>
+<li>tmp 文件夹中的数据当程序关闭就会被清除；</li>
+<li>Caches 文件夹当手机空间不足时候很可能就会被清空；</li>
+</ul>
+<h4 id="Documents"><a href="#Documents" class="headerlink" title="Documents"></a>Documents</h4><p>这个目录存储用户生成的内容，应该并且只应该把希望暴露给用户的文件放在这里，如软件的备份文件，用户可以访问并可以转存。或者如 <code>Mindnode</code> 中的每个思维导图的文件，这是用户生成的也是用户希望可以自己看到并掌控的文件。</p>
+<p>这个目录会被 iTunes 或者 iCloud 备份，因此不会丢失。</p>
+<h4 id="Library"><a href="#Library" class="headerlink" title="Library"></a>Library</h4><p>这个目录放的应该是非用户的数据，用户不需要看到。这个目录中除了 <code>Caches</code> 目录的其他目录会被 iTunes 或者 iCloud 备份。</p>
+<p>Preference：</p>
+<ul>
+<li>这里面应该存放应用的偏好设置，比如某个按钮的开关状态，这是不会被删除且会被备份的；</li>
+</ul>
+<p>Caches：</p>
+<ul>
+<li>这里存放缓存数据，比如网络加载的图片等；</li>
+<li>缓存数据在 iOS 5.0 以后，只有当手机空间不足的时候，系统才会主动去清理，并且当应用运行的时候一定不会清理；</li>
+</ul>
+<h4 id="tmp"><a href="#tmp" class="headerlink" title="tmp"></a>tmp</h4><p>这了的文件是应用运行过程中的临时文件，当应用程序不再运行的时候系统就会删除这里的文件。这个目录不会被备份。</p>
+<h2 id="路径的获取方式"><a href="#路径的获取方式" class="headerlink" title="路径的获取方式"></a>路径的获取方式</h2><figure class="highlight objc"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 1. 获取 App 包路径</span></span><br><span class="line"><span class="built_in">NSString</span> *boundlePath = [<span class="built_in">NSBundle</span> mainBundle].bundlePath;</span><br><span class="line"><span class="built_in">NSLog</span>(<span class="string">@&quot;包路径：%@&quot;</span>, boundlePath);</span><br><span class="line"></span><br><span class="line"><span class="comment">// 2. 获取 Data Container 根路径</span></span><br><span class="line"><span class="built_in">NSString</span> *homePath = <span class="built_in">NSHomeDirectory</span>(); <span class="comment">// 由名字可见，这个目录可以理解为本 app 的用户的家目录</span></span><br><span class="line"><span class="built_in">NSLog</span>(<span class="string">@&quot;Data Container 路径：%@&quot;</span>, homePath);</span><br><span class="line"></span><br><span class="line"><span class="comment">// 3. 获取 Documents 路径</span></span><br><span class="line"><span class="comment">// NSSearchPathDirectory  要找的什么文件</span></span><br><span class="line"><span class="comment">// NSSearchPathDomainMask 搜索域，这里是用户域下</span></span><br><span class="line"><span class="comment">// expandTilde 是否展开路径，如果填 NO 的话前面就会显示 ~</span></span><br><span class="line"><span class="built_in">NSString</span> *documentsPath = [<span class="built_in">NSSearchPathForDirectoriesInDomains</span>(<span class="built_in">NSDocumentDirectory</span>, <span class="built_in">NSUserDomainMask</span>, <span class="literal">YES</span>) firstObject];</span><br><span class="line"><span class="built_in">NSLog</span>(<span class="string">@&quot;Documents 路径：%@&quot;</span>, documentsPath);</span><br><span class="line"></span><br><span class="line"><span class="comment">// 4.获取 Library/Caches 路径</span></span><br><span class="line"><span class="built_in">NSString</span> *cachesPath = [<span class="built_in">NSSearchPathForDirectoriesInDomains</span>(<span class="built_in">NSCachesDirectory</span>, <span class="built_in">NSUserDomainMask</span>, <span class="literal">YES</span>) firstObject];</span><br><span class="line"><span class="built_in">NSLog</span>(<span class="string">@&quot;Library/Caches 路径：%@&quot;</span>, cachesPath);</span><br><span class="line"></span><br><span class="line"><span class="comment">// 5.获取 tmp 路径</span></span><br><span class="line"><span class="built_in">NSString</span> *tmpPath = <span class="built_in">NSTemporaryDirectory</span>();</span><br><span class="line"><span class="built_in">NSLog</span>(<span class="string">@&quot;tmp 路径：%@&quot;</span>, tmpPath);</span><br></pre></td></tr></table></figure>
+
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/iOS/" rel="tag"># iOS</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2016/10/21/pch-file-usage/" rel="prev" title="PCH 文件的使用">
+      <i class="fa fa-chevron-left"></i> PCH 文件的使用
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/2017/02/22/switch-in-swift/" rel="next" title="谈谈 Swift 中的 Switch">
+      谈谈 Swift 中的 Switch <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%B8%B8%E7%94%A8%E7%9B%AE%E5%BD%95%E8%A7%A3%E9%87%8A"><span class="nav-number">1.</span> <span class="nav-text">常用目录解释</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Bundle-Container"><span class="nav-number">1.1.</span> <span class="nav-text">Bundle Container</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#APPName-app"><span class="nav-number">1.1.1.</span> <span class="nav-text">APPName.app</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Data-Container"><span class="nav-number">1.2.</span> <span class="nav-text">Data Container</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#Documents"><span class="nav-number">1.2.1.</span> <span class="nav-text">Documents</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Library"><span class="nav-number">1.2.2.</span> <span class="nav-text">Library</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#tmp"><span class="nav-number">1.2.3.</span> <span class="nav-text">tmp</span></a></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E8%B7%AF%E5%BE%84%E7%9A%84%E8%8E%B7%E5%8F%96%E6%96%B9%E5%BC%8F"><span class="nav-number">2.</span> <span class="nav-text">路径的获取方式</span></a></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <p class="site-author-name" itemprop="name">齐卫鹏</p>
+  <div class="site-description" itemprop="description"></div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">44</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-tags">
+        <span class="site-state-item-count">13</span>
+        <span class="site-state-item-name">标签</span>
+      </div>
+  </nav>
+</div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2024</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">齐卫鹏</span>
+</div>
+  <div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://muse.theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Muse</a> 强力驱动
+  </div>
+
+        
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/muse.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+</body>
+</html>
